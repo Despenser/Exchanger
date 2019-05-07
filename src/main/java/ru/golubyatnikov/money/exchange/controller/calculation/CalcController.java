@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.golubyatnikov.money.exchange.model.enumirate.DatePattern;
 import ru.golubyatnikov.money.exchange.model.service.CurrencyService;
 import ru.golubyatnikov.money.exchange.model.util.*;
@@ -26,6 +28,8 @@ import java.util.List;
 
 
 public class CalcController implements Initializable {
+
+    private static final Logger LOG = LogManager.getLogger(CalcController.class);
 
     @FXML private ComboBox<IsoCode> comboBoxCurrencyIn, comboBoxCurrencyOut;
     @FXML private ImageView imgBuyUSD, imgBuyEUR, imgBuyGBP, imgBuyCNY, imgSaleUSD, imgSaleEUR, imgSaleGBP, imgSaleCNY;
@@ -45,8 +49,9 @@ public class CalcController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
+        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
 
+        this.resources = resources;
         exchanger = Exchanger.getInstance();
         notification = Notification.getInstance();
         CurrencyService currencyService = new CurrencyService();
@@ -79,6 +84,8 @@ public class CalcController implements Initializable {
         Platform.runLater(this::rate);
         Platform.runLater(this::populateChart);
         Platform.runLater(this::calculate);
+
+        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     private boolean rateSaleIsNotNull(Currency currency){
@@ -127,16 +134,19 @@ public class CalcController implements Initializable {
 
             if (IN != IsoCode.RUB && OUT == IsoCode.RUB && sale != null) {
                 if (rateSaleIsNotNull(sale)) {
+                    LOG.info("Производится расчет продажи валюты: " + IN.name() + " на " + OUT.name());
                     labelResult.setText(DECIMAL_FORMAT.format(exchanger.buy(sale, Float.parseFloat(txtField.getText()))) + " " + resources.getString("rub"));
                 } else labelResult.setText(resources.getString("buy_rate_not_set"));
             }
             if (IN == IsoCode.RUB && OUT != IsoCode.RUB && buy != null) {
                 if (rateBuyIsNotNull(buy)) {
+                    LOG.info("Производится расчет покупки валюты: " + IN.name() + " на " + OUT.name());
                     labelResult.setText(DECIMAL_FORMAT.format(exchanger.sale(buy, Float.parseFloat(txtField.getText()))) + " " + buy.getCharCode());
                 } else labelResult.setText(resources.getString("sale_rate_not_set"));
             }
             if (IN != IsoCode.RUB && OUT != IsoCode.RUB && !IN.equals(OUT) && sale != null && buy != null) {
                 if (rateBuyIsNotNull(buy) || rateSaleIsNotNull(sale)) {
+                    LOG.info("Производится расчет покупки валюты по кросс курсу: " + IN.name() + " на " + OUT.name());
                     labelResult.setText(DECIMAL_FORMAT.format(exchanger.cross(sale, buy, Float.parseFloat(txtField.getText()))) + " " + buy.getCharCode());
                 } else labelResult.setText(resources.getString("buy_or_sale_rate_not_set"));
             }
@@ -144,6 +154,8 @@ public class CalcController implements Initializable {
     }
 
     private void rate(){
+        LOG.info("Загрузка курсовой разницы между днями");
+
         Currency USD = actualCurrencies.stream().filter(s -> s.getCharCode().equals(IsoCode.USD.name())).findAny().orElse(null);
         Currency EUR = actualCurrencies.stream().filter(s -> s.getCharCode().equals(IsoCode.EUR.name())).findAny().orElse(null);
         Currency GBP = actualCurrencies.stream().filter(s -> s.getCharCode().equals(IsoCode.GBP.name())).findAny().orElse(null);
@@ -161,9 +173,12 @@ public class CalcController implements Initializable {
             setLabelAndImg(lastButOneGBP, GBP, labelBuyGBP, labelSaleGBP, imgBuyGBP, imgSaleGBP);
             setLabelAndImg(lastButOneCNY, CNY, labelBuyCNY, labelSaleCNY, imgBuyCNY, imgSaleCNY);
         }
+
+        LOG.info("Загрузка курсовой разницы завершена");
     }
 
     private void populateChart() {
+        LOG.info("Наполнение линейной диаграммы с валютами ЦБ");
 
         XYChart.Series<String, Number> usd = new XYChart.Series<>();
         XYChart.Series<String, Number> eur = new XYChart.Series<>();
@@ -208,5 +223,7 @@ public class CalcController implements Initializable {
                 d.getNode().setOnMouseExited(event -> d.getNode().getStyleClass().remove("onHover"));
             }
         }
+
+        LOG.info("Наполнение линейной завершено");
     }
 }
