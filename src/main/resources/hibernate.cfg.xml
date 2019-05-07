@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- DATABASE PROPERTY -->
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/bank?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Moscow</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">admin</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
+        <property name="show_sql">true</property>
+
+        <!-- MAPPING ANNOTATIONS ENTITIES -->
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Auth"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Client"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Contact"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Company"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Currency"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Employee"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Gender"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Operation"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Passport"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Role"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.Status"/>
+        <mapping class="ru.golubyatnikov.money.exchange.model.entity.TypeOperation"/>
+    </session-factory>
+</hibernate-configuration>
+
+
+

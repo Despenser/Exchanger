@@ -1,0 +1,58 @@
+
+/*==== Цветовая палитра ====*/
+*{
+    -fx-primary: rgb(236, 236, 236);
+    -fx-primary-border: rgb(219, 219, 219);
+    -fx-light-red: rgba(239, 15, 40, 0.36);
+    -fx-red: rgba(255, 7, 22, 0.74);
+    -fx-light-green: rgba(72, 225, 87, 0.36);
+    -fx-green: rgba(38, 128, 49, 0.74);
+    -fx-light-blue: rgb(172, 217, 238);
+    -fx-blue: rgb(3, 158, 211);
+}
+
+/*==== Слайд-бар ====*/
+.slideBar {
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primary-border;
+}
+
+/*==== Графики ====*/
+.chart-title {
+    -fx-font-size: 16;
+    -fx-padding: 10px;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-background-color:  transparent;
+    -fx-font-weight: bold;
+    -fx-padding: 20px;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
+/*==== Валидация данных ====*/
+.wrong-fields {
+    -fx-border-color: -fx-light-red;
+    -fx-text-fill: -fx-red;
+}
+
+.good-fields {
+    -fx-border-color: -fx-light-green;
+    -fx-text-fill: -fx-green;
+}
+
+.green-text {
+    -fx-text-fill: -fx-green;
+}
+
+.red-text {
+    -fx-text-fill: -fx-red;
+}
+
+.blue-text {
+    -fx-text-fill: -fx-blue;
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<AnchorPane id="AnchorPane" prefHeight="350.0" prefWidth="400.0" stylesheets="/view/style/css/style.css"
+            xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.golubyatnikov.money.exchange.controller.login.LoginController">
+    <TextField fx:id="username" layoutX="83.0" layoutY="129.0" prefHeight="33.0" prefWidth="259.0" promptText="%login">
+        <font>
+            <Font size="14.0"/>
+        </font>
+        <cursor>
+            <Cursor fx:constant="DEFAULT"/>
+        </cursor>
+    </TextField>
+    <PasswordField fx:id="password" layoutX="83.0" layoutY="184.0" onAction="#goAuth" prefHeight="34.0"
+                   prefWidth="259.0" promptText="%password">
+        <font>
+            <Font size="14.0"/>
+        </font>
+        <cursor>
+            <Cursor fx:constant="DEFAULT"/>
+        </cursor>
+    </PasswordField>
+    <Button layoutX="136.0" layoutY="249.0" onAction="#goAuth" prefHeight="40.0" prefWidth="90.0" text="%come_in">
+        <font>
+            <Font name="System Bold" size="12.0"/>
+        </font>
+    </Button>
+    <Button layoutX="252.0" layoutY="249.0" onAction="#cancelAuth" prefHeight="40.0" prefWidth="90.0" text="%close">
+        <font>
+            <Font name="System Bold" size="12.0"/>
+        </font>
+    </Button>
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" layoutY="23.0" prefHeight="50.0" prefWidth="400.0"
+           text="%hello" textAlignment="CENTER" wrapText="true">
+        <font>
+            <Font name="System Bold" size="16.0"/>
+        </font>
+    </Label>
+    <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="36.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../style/img/common/other/login.png"/>
+    </ImageView>
+    <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="36.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../style/img/common/other/password.png"/>
+    </ImageView>
+    <Label alignment="CENTER" layoutY="73.0" prefHeight="17.0" prefWidth="403.0" text="%auth"/>
+</AnchorPane>

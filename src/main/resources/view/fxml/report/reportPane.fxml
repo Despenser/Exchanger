@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="894.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.golubyatnikov.money.exchange.controller.report.ReportController">
+    <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Tab text="%current_day_operations">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <VBox prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <AnchorPane>
+                        <Label prefHeight="17.0" prefWidth="560.0" text="%description" underline="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="152.0" prefWidth="560.0">
+                        <padding>
+                            <Insets bottom="3.0" top="5.0" />
+                        </padding>
+                        <Label alignment="TOP_LEFT" layoutY="10.0" prefHeight="136.0" prefWidth="560.0" text="%final_report_for_current_day" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    </AnchorPane>
+                    <AnchorPane>
+                        <Button mnemonicParsing="false" onAction="#todayReport" prefHeight="35.0" text="%create_report_for_current_day" />
+                    </AnchorPane>
+                </VBox>
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </padding>
+            </AnchorPane>
+        </Tab>
+        <Tab text="%day_operations">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <VBox prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <AnchorPane>
+                        <Label prefHeight="17.0" prefWidth="560.0" text="%description" underline="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="80.0" prefWidth="580.0">
+                        <padding>
+                            <Insets bottom="3.0" top="5.0" />
+                        </padding>
+                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="580.0" text="%final_report_for_given_day" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    </AnchorPane>
+                    <HBox>
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                        <padding>
+                            <Insets bottom="20.0" />
+                        </padding>
+                        <VBox>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                            <padding>
+                                <Insets right="8.0" />
+                            </padding>
+                            <AnchorPane>
+                                <Label prefHeight="17.0" prefWidth="174.0" text="%date_report" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <padding>
+                                        <Insets bottom="3.0" left="2.0" />
+                                    </padding>
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                            </AnchorPane>
+                            <DatePicker fx:id="specifiedDate" prefHeight="32.0" prefWidth="174.0" />
+                        </VBox>
+                    </HBox>
+                    <AnchorPane>
+                        <Button mnemonicParsing="false" onAction="#specifiedDayReport" prefHeight="35.0" text="%generate_report_for_given_day" />
+                    </AnchorPane>
+                </VBox>
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </padding>
+            </AnchorPane>
+        </Tab>
+        <Tab text="%currency_operations_for_period">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <VBox prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <AnchorPane>
+                        <Label text="%description" underline="true">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="80.0" prefWidth="580.0">
+                        <padding>
+                            <Insets bottom="3.0" top="5.0" />
+                        </padding>
+                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="580.0" text="%report_on_selected_currency_for_given_period" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    </AnchorPane>
+                    <HBox>
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                        <padding>
+                            <Insets bottom="20.0" />
+                        </padding>
+                        <VBox>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                            <padding>
+                                <Insets right="8.0" />
+                            </padding>
+                            <AnchorPane>
+                                <Label prefHeight="17.0" prefWidth="150.0" text="%currency" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <padding>
+                                        <Insets bottom="3.0" left="2.0" />
+                                    </padding>
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                            </AnchorPane>
+                            <ComboBox fx:id="comboBoxCurrencies" prefHeight="32.0" prefWidth="150.0" />
+                        </VBox>
+                        <VBox>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                            <padding>
+                                <Insets right="8.0" />
+                            </padding>
+                            <AnchorPane>
+                                <Label prefHeight="17.0" prefWidth="174.0" text="%period_from" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets bottom="3.0" left="2.0" />
+                                    </padding>
+                                </Label>
+                            </AnchorPane>
+                            <DatePicker fx:id="dateWith" prefHeight="32.0" prefWidth="174.0" />
+                        </VBox>
+                        <VBox>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                            <padding>
+                                <Insets right="8.0" />
+                            </padding>
+                            <AnchorPane>
+                                <Label prefHeight="17.0" prefWidth="174.0" text="%period_of" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <padding>
+                                        <Insets bottom="3.0" left="2.0" />
+                                    </padding>
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                            </AnchorPane>
+                            <DatePicker fx:id="dateBy" prefHeight="32.0" prefWidth="174.0" />
+                        </VBox>
+                    </HBox>
+                    <AnchorPane>
+                        <Button mnemonicParsing="false" onAction="#selectedCurrencyReport" prefHeight="35.0" text="%generate_report_on_the_selected_currency" />
+                    </AnchorPane>
+                </VBox>
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </padding>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+</AnchorPane>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" monitorInterval="5">
+    <Properties>
+        <Property name="DIRECTORY_LOGS">${sys:user.home}\Exchanger</Property>
+    </Properties>
+    <Appenders>
+        <Console name="consoleLogger" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%c] - %msg%n"/>
+        </Console>
+        <RollingFile name="infoLogger" fileName="${DIRECTORY_LOGS}/exchanger.log" filePattern="${DIRECTORY_LOGS}/exchanger-%d{dd-MM-yyyy}.log">
+            <PatternLayout pattern="%d{dd-MM-yyyy HH:mm:ss.SSS} %level [%t] %logger{36} - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="consoleLogger" level="INFO"/>
+            <AppenderRef ref="infoLogger" level="INFO"/>
+        </Root>
+    </Loggers>
+</Configuration>

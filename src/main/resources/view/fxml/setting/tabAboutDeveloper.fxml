@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<TitledPane prefHeight="627.0" prefWidth="933.0" stylesheets="/view/style/css/style.css" text="%info_about_developer"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.golubyatnikov.money.exchange.controller.setting.AboutDeveloperController">
+    <font>
+        <Font name="System Bold" size="12.0"/>
+    </font>
+    <AnchorPane prefHeight="500.0" prefWidth="500.0">
+        <ImageView fx:id="imgDeveloper" fitHeight="180.0" fitWidth="150.0" layoutX="20.0" layoutY="21.0"
+                   pickOnBounds="true" preserveRatio="true"/>
+        <Label layoutX="181.0" layoutY="21.0" text="%personal_data" underline="true">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <GridPane layoutX="181.0" layoutY="43.0" prefHeight="93.0" prefWidth="233.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="158.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="32.0" minHeight="29.0" prefHeight="32.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="43.0" minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <AnchorPane GridPane.columnIndex="1">
+                <Label fx:id="labelSurname" layoutY="1.0" prefHeight="30.0" prefWidth="100.0"
+                       AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="1.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label fx:id="labelName" prefHeight="30.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label fx:id="labelMiddleName" prefHeight="30.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane>
+                <Label text="%surname" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="1">
+                <Label text="%name" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="2">
+                <Label text="%middle_name" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+        </GridPane>
+        <Label layoutX="433.0" layoutY="21.0" text="%contacts" underline="true">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <GridPane layoutX="433.0" layoutY="46.0" prefHeight="88.0" prefWidth="455.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.0" minWidth="10.0" prefWidth="207.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <AnchorPane GridPane.columnIndex="1">
+                <Hyperlink fx:id="linkVK" onAction="#linkToVK" prefHeight="30.0" prefWidth="100.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Hyperlink fx:id="linkGitHub" onAction="#linkToGithub" prefHeight="30.0" prefWidth="100.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Hyperlink fx:id="linkEmail" onAction="#linkToEmail" prefHeight="30.0" prefWidth="100.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane>
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
+                <Label prefHeight="30.0" prefWidth="100.0" text="%vk" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="1">
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
+                <Label prefHeight="29.0" prefWidth="203.0" text="GitHub" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="2">
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
+                <Label prefHeight="30.0" prefWidth="203.0" text="%mail" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+        </GridPane>
+        <Separator layoutX="7.6" layoutY="229.0" prefHeight="2.0" prefWidth="765.0" AnchorPane.leftAnchor="-10.0"
+                   AnchorPane.rightAnchor="-10.0"/>
+        <Separator layoutX="399.0" layoutY="-9.0" orientation="VERTICAL" prefHeight="238.0" prefWidth="5.0"/>
+        <Label layoutX="20.0" layoutY="242.0" text="%about_developer_and_project" underline="true">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <AnchorPane layoutX="27.6" layoutY="266.0" prefHeight="170.0" prefWidth="715.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0">
+            <Label fx:id="labelAbout" alignment="TOP_LEFT" ellipsisString="" prefHeight="170.0" prefWidth="733.8"
+                   wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
+                   AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0"/>
+        </AnchorPane>
+        <Label fx:id="labelCopyrating" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="415.0"
+               textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
+               AnchorPane.rightAnchor="20.0">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+</TitledPane>

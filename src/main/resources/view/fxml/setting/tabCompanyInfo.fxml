@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<TitledPane stylesheets="/view/style/css/style.css" text="%info_about_company" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.golubyatnikov.money.exchange.controller.setting.CompanyInfoController">
+    <font>
+        <Font name="System Bold" size="12.0" />
+    </font>
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" prefHeight="767.0" prefViewportHeight="186.0" prefViewportWidth="663.0" prefWidth="689.0">
+        <AnchorPane>
+            <VBox>
+                <AnchorPane>
+                    <Label fx:id="labelFieldsEdit" prefHeight="17.0" prefWidth="663.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <padding>
+                            <Insets bottom="5.0" left="15.0" right="5.0" top="15.0" />
+                        </padding>
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Label>
+                </AnchorPane>
+                <GridPane fx:id="gridPane" hgap="10.0" layoutX="10.0" layoutY="10.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="288.0" minWidth="155.0" prefWidth="177.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="478.0" minWidth="345.0" prefWidth="456.0" />
+                    </columnConstraints>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <Label text="%name_not_colon">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldCompanyName" maxWidth="300.0" GridPane.columnIndex="1" />
+                    <Label text="%licence_not_colon" GridPane.rowIndex="1">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldLicence" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label text="%registration_date" GridPane.rowIndex="2">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <DatePicker fx:id="datePickerRegistration" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label text="%cor_score_not_colon" GridPane.rowIndex="3">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldCorScore" editable="false" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label text="%bik_not_colon" GridPane.rowIndex="4">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldBIK" editable="false" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <Label text="%inn_not_colon" GridPane.rowIndex="5">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldINN" editable="false" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    <Label text="%kpp_not_colon" GridPane.rowIndex="6">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldKPP" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                    <Label text="%ogrn_not_colon" GridPane.rowIndex="7">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldOGRN" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                    <Label text="%okpo_not_colon" GridPane.rowIndex="8">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldOKPO" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                    <Label text="%okato_not_colon" GridPane.rowIndex="9">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldOKATO" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                    <Label text="%phone" GridPane.rowIndex="10">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldPhone" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                    <Label layoutX="25.0" layoutY="147.0" text="E-mail" GridPane.rowIndex="11">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <GridPane.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <TextField fx:id="txtFieldEmail" editable="false" maxWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                    <Label text="%actual_address" GridPane.rowIndex="12">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Label>
+                    <TextArea fx:id="txtAreaActualAddress" maxHeight="100.0" maxWidth="300.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                    <Label text="%legal_address_not_colon" GridPane.rowIndex="13">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Label>
+                    <TextArea fx:id="txtAreaLegalAddress" maxHeight="100.0" maxWidth="300.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                    <HBox prefHeight="29.0" prefWidth="456.0" GridPane.columnIndex="1" GridPane.rowIndex="14">
+                        <padding>
+                            <Insets top="5.0" />
+                        </padding>
+                        <GridPane.margin>
+                            <Insets bottom="10.0" />
+                        </GridPane.margin>
+                        <Button fx:id="edit" mnemonicParsing="false" onAction="#editableFields" GridPane.columnIndex="1" GridPane.rowIndex="12">
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets bottom="5.0" right="5.0" top="5.0" />
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="save" mnemonicParsing="false" onAction="#saveCompanyInfo" text="%save" GridPane.columnIndex="1" GridPane.rowIndex="12">
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </HBox.margin>
+                        </Button>
+                    </HBox>
+                </GridPane>
+            </VBox>
+        </AnchorPane>
+    </ScrollPane>
+</TitledPane>
