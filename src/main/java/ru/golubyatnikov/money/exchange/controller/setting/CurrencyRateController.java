@@ -90,8 +90,8 @@ public class CurrencyRateController implements Initializable {
         currency.setValueBuy(Float.parseFloat(txtFieldRateBuy.getText()));
         currency.setValueSale(Float.parseFloat(txtFieldRateSale.getText()));
         currencyService.update(currency);
-        Notification.getInstance().complete(resources.getString("data_about_currency") + " " + currency.getName() +
-                resources.getString("on") + " " + DateEditor.formatLocalDateToString(dateCurrency.getValue(), DatePattern.PATTERN_DOT) +
+        Notification.getInstance().complete(resources.getString("data_about_currency") + " " + currency.getName() + " " +
+                resources.getString("on") + " " + DateEditor.formatLocalDateToString(dateCurrency.getValue(), DatePattern.PATTERN_DOT) + " " +
                 resources.getString("successfully_update") + "\n\n" +
                 resources.getString("rate_sale") + ": " + currency.getValueSale() + "\n" +
                 resources.getString("rate_buy") + ": " + currency.getValueBuy() + "\n");
