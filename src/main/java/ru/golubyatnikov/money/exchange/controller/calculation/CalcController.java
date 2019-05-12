@@ -88,41 +88,6 @@ public class CalcController implements Initializable {
         LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
-    private boolean rateSaleIsNotNull(Currency currency){
-        return currency.getValueSale() != 0.00;
-    }
-
-    private boolean rateBuyIsNotNull(Currency currency){
-        return currency.getValueBuy() != 0.00;
-    }
-
-    private float saleDifference(Currency actual, Currency lastButOne){
-        return actual.getValueSale() - lastButOne.getValueSale();
-    }
-
-    private float buyDifference(Currency actual, Currency lastButOne){
-        return actual.getValueBuy() - lastButOne.getValueBuy();
-    }
-
-    private void setImgRate(float difference, ImageView imageView){
-        if (difference < 0) {
-            imageView.setImage(new Image(IMG_RATE_DOWN));
-            Tooltip.install(imageView, notification.tooltip(resources.getString("rate_down") + " " + DECIMAL_FORMAT.format(difference)));
-        } else {
-            imageView.setImage(new Image(IMG_RATE_UP));
-            Tooltip.install(imageView, notification.tooltip(resources.getString("rate_up") + " " + DECIMAL_FORMAT.format(difference)));
-        }
-    }
-
-    private void setLabelAndImg(Currency lastButOne, Currency actual, Label labelBuy, Label labelSale, ImageView imgBuy, ImageView imgSale){
-        if (rateSaleIsNotNull(lastButOne) && rateBuyIsNotNull(lastButOne)){
-            labelBuy.setText(String.valueOf(actual.getValueBuy()));
-            labelSale.setText(String.valueOf(actual.getValueSale()));
-            setImgRate(buyDifference(actual, lastButOne), imgBuy);
-            setImgRate(saleDifference(actual, lastButOne), imgSale);
-        }
-    }
-
     private void calculate() {
         IN = comboBoxCurrencyIn.getSelectionModel().getSelectedItem();
         OUT = comboBoxCurrencyOut.getSelectionModel().getSelectedItem();
@@ -151,6 +116,41 @@ public class CalcController implements Initializable {
                 } else labelResult.setText(resources.getString("buy_or_sale_rate_not_set"));
             }
         }
+    }
+
+    private void setImgRate(float difference, ImageView imageView){
+        if (difference < 0) {
+            imageView.setImage(new Image(IMG_RATE_DOWN));
+            Tooltip.install(imageView, notification.tooltip(resources.getString("rate_down") + " " + DECIMAL_FORMAT.format(difference)));
+        } else {
+            imageView.setImage(new Image(IMG_RATE_UP));
+            Tooltip.install(imageView, notification.tooltip(resources.getString("rate_up") + " " + DECIMAL_FORMAT.format(difference)));
+        }
+    }
+
+    private void setLabelAndImg(Currency lastButOne, Currency actual, Label labelBuy, Label labelSale, ImageView imgBuy, ImageView imgSale){
+        if (rateSaleIsNotNull(lastButOne) && rateBuyIsNotNull(lastButOne)){
+            labelBuy.setText(String.valueOf(actual.getValueBuy()));
+            labelSale.setText(String.valueOf(actual.getValueSale()));
+            setImgRate(buyDifference(actual, lastButOne), imgBuy);
+            setImgRate(saleDifference(actual, lastButOne), imgSale);
+        }
+    }
+
+    private float buyDifference(Currency actual, Currency lastButOne){
+        return actual.getValueBuy() - lastButOne.getValueBuy();
+    }
+
+    private float saleDifference(Currency actual, Currency lastButOne){
+        return actual.getValueSale() - lastButOne.getValueSale();
+    }
+
+    private boolean rateSaleIsNotNull(Currency currency){
+        return currency.getValueSale() != 0.00;
+    }
+
+    private boolean rateBuyIsNotNull(Currency currency){
+        return currency.getValueBuy() != 0.00;
     }
 
     private void rate(){
