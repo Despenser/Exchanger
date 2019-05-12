@@ -45,10 +45,12 @@ public class CompanyInfoController implements Initializable {
         companyService = new CompanyService();
         lockFields = false;
 
-        Platform.runLater(this::setValidateOnPane);
-        Platform.runLater(this::loadCompany);
-        Platform.runLater(this::editableFields);
-        Platform.runLater(this::showDetails);
+        Platform.runLater(() -> {
+            setValidateOnPane();
+            loadCompany();
+            editableFields();
+            showDetails();
+        });
     }
 
     private void loadCompany() {
@@ -147,7 +149,6 @@ public class CompanyInfoController implements Initializable {
         } else editableFields();
     }
 
-    //TODO валидация телефона
     private void setValidateOnPane(){
         validator.validatePane(save, gridPane);
         validator.fieldsNotNull(resources.getString("credit_organization"), 4, txtFieldCompanyName);
@@ -163,6 +164,7 @@ public class CompanyInfoController implements Initializable {
         validator.onlyInteger(resources.getString("okpo_num"), txtFieldOKPO, 8);
         validator.onlyInteger(resources.getString("kpp_num"), txtFieldKPP, 9);
         validator.email(resources.getString("company_email"), txtFieldEmail);
-        //txtFieldPhone
+        //TODO валидация телефона
+        txtFieldPhone.setPromptText(resources.getString("company_phone"));
     }
 }
