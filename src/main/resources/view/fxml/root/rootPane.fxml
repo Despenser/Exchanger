@@ -13,36 +13,43 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.golubyatnikov.money.exchange.controller.root.RootController">
-    <JFXDrawer fx:id="drawer" alignment="TOP_LEFT" defaultDrawerSize="200.0" resizableOnDrag="true" resizeContent="true" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0" />
-    <VBox prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.golubyatnikov.money.exchange.controller.root.RootController">
+    <JFXDrawer fx:id="drawer" alignment="TOP_LEFT" defaultDrawerSize="200.0" resizableOnDrag="true" resizeContent="true"
+               AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.topAnchor="37.0"/>
+    <VBox prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER" prefHeight="36.0" prefWidth="1024.0">
             <AnchorPane opacity="0.8" prefHeight="36.0" prefWidth="51.0">
                 <HBox.margin>
-                    <Insets left="10.0" />
+                    <Insets left="10.0"/>
                 </HBox.margin>
-                <JFXHamburger fx:id="hamburger" alignment="CENTER" opacity="0.6" prefHeight="36.0" prefWidth="35.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <JFXHamburger fx:id="hamburger" alignment="CENTER" opacity="0.6" prefHeight="36.0" prefWidth="35.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
                     <padding>
-                        <Insets bottom="12.0" top="11.0" />
+                        <Insets bottom="12.0" top="11.0"/>
                     </padding>
                 </JFXHamburger>
             </AnchorPane>
             <Pane prefHeight="36.0" prefWidth="942.0" HBox.hgrow="ALWAYS">
                 <HBox.margin>
-                    <Insets left="5.0" right="5.0" />
+                    <Insets left="5.0" right="5.0"/>
                 </HBox.margin>
             </Pane>
             <ImageView onMouseClicked="#logOut" opacity="0.6" pickOnBounds="true" preserveRatio="true">
                 <viewport>
-                    <Rectangle2D />
+                    <Rectangle2D/>
                 </viewport>
                 <HBox.margin>
-                    <Insets bottom="5.0" right="13.0" top="5.0" />
+                    <Insets bottom="5.0" right="13.0" top="5.0"/>
                 </HBox.margin>
-                <Image url="@../../style/img/common/other/logOut.png" />
+                <Image url="@../../style/img/common/other/logOut.png"/>
             </ImageView>
         </HBox>
-        <Separator prefWidth="200.0" />
+        <Separator prefWidth="200.0"/>
         <AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                     minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS">
             <Label text="%label_start" alignment="CENTER" contentDisplay="CENTER" prefHeight="702.0" prefWidth="1024.0"
@@ -50,14 +57,16 @@
                    AnchorPane.topAnchor="0.0"/>
         </AnchorPane>
         <AnchorPane prefHeight="27.0" prefWidth="1024.0">
-            <HBox prefHeight="27.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox prefHeight="27.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <AnchorPane>
                     <HBox.margin>
-                        <Insets left="8.0" />
+                        <Insets left="8.0"/>
                     </HBox.margin>
-                    <Label fx:id="labelEmployee" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    <Label fx:id="labelEmployee" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                 </AnchorPane>
-                <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
             </HBox>
         </AnchorPane>
     </VBox>

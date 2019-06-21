@@ -5,7 +5,7 @@
     </Properties>
     <Appenders>
         <Console name="consoleLogger" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%c] - %msg%n"/>
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%c] - %msg%n"/>
         </Console>
         <RollingFile name="infoLogger" fileName="${DIRECTORY_LOGS}/exchanger.log" filePattern="${DIRECTORY_LOGS}/exchanger-%d{dd-MM-yyyy}.log">
             <PatternLayout pattern="%d{dd-MM-yyyy HH:mm:ss.SSS} %level [%t] %logger{36} - %msg%n"/>

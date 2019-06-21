@@ -6,8 +6,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
+
 <AnchorPane id="AnchorPane" prefHeight="350.0" prefWidth="400.0" stylesheets="/view/style/css/style.css"
-            xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.golubyatnikov.money.exchange.controller.login.LoginController">
     <TextField fx:id="username" layoutX="83.0" layoutY="129.0" prefHeight="33.0" prefWidth="259.0" promptText="%login">
         <font>
@@ -17,8 +18,7 @@
             <Cursor fx:constant="DEFAULT"/>
         </cursor>
     </TextField>
-    <PasswordField fx:id="password" layoutX="83.0" layoutY="184.0" onAction="#goAuth" prefHeight="34.0"
-                   prefWidth="259.0" promptText="%password">
+    <PasswordField fx:id="password" layoutX="83.0" layoutY="184.0" onAction="#goAuth" prefHeight="34.0" prefWidth="259.0" promptText="%password">
         <font>
             <Font size="14.0"/>
         </font>

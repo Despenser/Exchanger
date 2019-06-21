@@ -6,16 +6,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jdom2.JDOMException;
 import ru.golubyatnikov.money.exchange.model.entity.*;
 import ru.golubyatnikov.money.exchange.model.generic.GenericService;
 import ru.golubyatnikov.money.exchange.model.service.*;
-import ru.golubyatnikov.money.exchange.model.util.ActualCurrency;
-import ru.golubyatnikov.money.exchange.model.util.AddDataToBase;
-import ru.golubyatnikov.money.exchange.model.util.Hibernate;
-import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
+import ru.golubyatnikov.money.exchange.model.util.*;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ResourceBundle;
@@ -26,12 +21,9 @@ import java.util.ResourceBundle;
 * Логирование действий
 * Валидация телефона и валидация формы заведения клиента
 * Внести в бандлы использование строк за исключением логирования
-* Логирование сделать на английском
 * Рефакторинг проекта
 */
 public class Main extends Application {
-
-    private static final Logger LOG = LogManager.getLogger(Main.class);
 
     private ObservableList<Client> clients;
     private ObservableList<Employee> employees;
@@ -40,6 +32,7 @@ public class Main extends Application {
     private ObservableList<Gender> genders;
     private ObservableList<Role> roles;
 
+    private ProjectInformant informant;
     private AddDataToBase addDataToBase;
     private Employee currentEmployee;
     private volatile boolean isAdmin;
@@ -84,7 +77,7 @@ public class Main extends Application {
         this.currentEmployee = currentEmployee;
     }
 
-    public boolean isAdmin() {
+    public boolean isNotAdmin() {
         return !isAdmin;
     }
 
@@ -92,9 +85,10 @@ public class Main extends Application {
         isAdmin = admin;
     }
 
-
     @Override
     public void init() {
+        informant = new ProjectInformant(Main.class);
+
         Platform.runLater(Hibernate::getSessionFactory);
         addDataToBase = AddDataToBase.getInstance();
 
@@ -116,32 +110,50 @@ public class Main extends Application {
     }
 
     private void uploadCurrencies(){
+        informant.logInfo("Загрузка актуальных курсов валют");
         try {
             ActualCurrency.getInstance().uploadForTodayOrMonth();
+            informant.logInfo("Загрузка актуальных курсов валют завершена");
         } catch (IOException | JDOMException e) {
-            e.printStackTrace();
+            informant.logError("При загрузке курсов валют произошел сбой", e);
         }
     }
 
     private <T extends GenericService> void checkDataInTable(T t, ObservableList<?> list, String commandCreate) {
-        if (t.isEmptyTable().equals(new BigInteger("1"))) list.setAll(t.findAll());
+        informant.logInfo("Проверка данных в базе для работы");
+        if (t.isEmptyTable().equals(new BigInteger("1"))) {
+            informant.logInfo("Данные найдены, процесс наполнения коллекции");
+            list.setAll(t.findAll());
+        }
         else {
+            informant.logInfo("Данные в таблице не найдены, процедура наполнения таблицы данными...");
             setDataInTable(commandCreate);
+            informant.logInfo("Наполнение таблицы - завершено, процесс наполнения коллекции данными");
             list.setAll(t.findAll());
         }
     }
 
     private void setDataInTable(String whatPopulate) {
         switch (whatPopulate) {
-            case "createRoles": addDataToBase.createRoles();
+            case "createRoles":
+                informant.logInfo("Процесс создания ролей");
+                addDataToBase.createRoles();
                 break;
-            case "createGenders": addDataToBase.createGenders();
+            case "createGenders":
+                informant.logInfo("Процесс создания статусов половой принадлежности");
+                addDataToBase.createGenders();
                 break;
-            case "createStatuses": addDataToBase.createStatus();
+            case "createStatuses":
+                informant.logInfo("Процесс создания статусов");
+                addDataToBase.createStatus();
                 break;
-            case "createTypeOperation": addDataToBase.createTypeOperations();
+            case "createTypeOperation":
+                informant.logInfo("Процесс создания типов операций");
+                addDataToBase.createTypeOperations();
                 break;
-            case "createAdmin": addDataToBase.createAdmin();
+            case "createAdmin":
+                informant.logInfo("Процесс создания учетной записи администратора");
+                addDataToBase.createAdmin();
                 break;
             default:
                 break;
@@ -154,13 +166,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        LoaderFXML.getInstance().loadRoot(stage, "login/loginPane", ResourceBundle.getBundle("bundle/localization").getString("application_name"),
-                419, 367, false);
+        informant.logInfo("Процесс запуска окна авторизации");
+        LoaderFXML.getInstance().loadRoot(stage, "login/loginPane",
+                ResourceBundle.getBundle("bundle/localization").getString("application_name"), 419, 367, false);
         LoaderFXML.getInstance().setMain(this);
+        informant.logInfo("Окно авторизации запущено");
     }
 
     @Override
     public void stop() {
+        informant.logInfo("Завершение работы приложения");
         Hibernate.shutdown();
+        Platform.exit();
     }
 }

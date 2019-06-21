@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.jdom2.JDOMException;
 import ru.golubyatnikov.money.exchange.model.util.ActualCurrency;
-import ru.golubyatnikov.money.exchange.model.util.Notification;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,31 +14,31 @@ import java.util.ResourceBundle;
 public class UploadCurrenciesController implements Initializable {
 
     private ActualCurrency actualCurrency;
-    private Notification notification;
+    private ProjectInformant informant;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         actualCurrency = ActualCurrency.getInstance();
-        notification = Notification.getInstance();
+        informant = new ProjectInformant(UploadCurrenciesController.class);
     }
 
     @FXML
     private void upload() {
         try {
-            actualCurrency.upload();
+            boolean isUpload = actualCurrency.upload();
+            if (isUpload) informant.logInfoAndShowNotificationComplete("Актуальные курсы валют успешно загружены");
         } catch (IOException | JDOMException e) {
-            e.printStackTrace();
-            notification.warning("При загрузке курсов произошел сбой");
+            informant.logErrorAndShowNotification("При загрузке курсов произошел сбой", e);
         }
     }
 
     @FXML
     private void uploadForMonth() {
         try {
-            actualCurrency.uploadForMonth();
+            boolean isUpload = actualCurrency.uploadForMonth();
+            if (isUpload) informant.logInfoAndShowNotificationComplete("Курсы валют за последний месяц успешно загружены");
         } catch (IOException | JDOMException e) {
-            e.printStackTrace();
-            notification.warning("При загрузке курсов произошел сбой");
+            informant.logErrorAndShowNotification("При загрузке курсов произошел сбой", e);
         }
     }
 }

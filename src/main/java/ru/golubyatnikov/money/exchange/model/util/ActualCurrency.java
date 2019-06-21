@@ -44,24 +44,26 @@ public class ActualCurrency {
         uploadForMonth();
     }
 
-    public void upload() throws IOException, JDOMException {
+    public boolean upload() throws IOException, JDOMException {
         if (!isEmptyCurrencyBase()){
             List<Currency> actualCurrencies = loadCurrenciesFromSite(getLocalDateNow());
             checkAndUploadCurrencies(actualCurrencies, currencyService.findLastDate());
         }
+        return true;
     }
 
     //TODO проверять что курсы уже есть в базе (загружает повторно ДУБЛИКАТЫ)
-    public void uploadForMonth() throws IOException, JDOMException {
+    public boolean uploadForMonth() throws IOException, JDOMException {
         if (isEmptyCurrencyBase()) {
             List<Currency> listCurrencies = loadCurrenciesFromSite(getLocalDateNow().minusDays(30));
             listCurrencies.forEach(currency -> currencyService.create(currency));
-            for (int i = 29; i >= 1; i--) {
+            for (int i = 30; i >= 1; i--) {
                 List<Currency> list = loadCurrenciesFromSite(getLocalDateNow().minusDays(i));
                 List<Currency> last = currencyService.findLastDate();
                 checkAndUploadCurrencies(list, last);
             }
         }
+        return true;
     }
 
     private boolean isEmptyCurrencyBase() {

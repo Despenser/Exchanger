@@ -11,13 +11,13 @@ import ru.golubyatnikov.money.exchange.model.entity.Company;
 import ru.golubyatnikov.money.exchange.model.entity.Contact;
 import ru.golubyatnikov.money.exchange.model.enumirate.StateColor;
 import ru.golubyatnikov.money.exchange.model.service.CompanyService;
-import ru.golubyatnikov.money.exchange.model.util.Notification;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import ru.golubyatnikov.money.exchange.model.util.Validator;
 import javax.persistence.NoResultException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-//TODO Всплывающее уведомление при сохранении и почему то блокируются и разблокируются поля при сохранении
+
 public class CompanyInfoController implements Initializable {
 
     @FXML private Button edit, save;
@@ -29,19 +29,20 @@ public class CompanyInfoController implements Initializable {
     @FXML private TextField txtFieldCompanyName, txtFieldLicence, txtFieldCorScore, txtFieldBIK, txtFieldINN,
             txtFieldOGRN, txtFieldOKATO, txtFieldOKPO, txtFieldKPP, txtFieldEmail, txtFieldPhone;
 
+    private ProjectInformant informant;
     private CompanyService companyService;
     private Company company;
     private Validator validator;
-    private Notification notification;
     private ResourceBundle resources;
     private boolean lockFields;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
+        informant = new ProjectInformant(AboutDeveloperController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
+        this.resources = resources;
         validator = Validator.getInstance();
-        notification = Notification.getInstance();
         companyService = new CompanyService();
         lockFields = false;
 
@@ -51,53 +52,87 @@ public class CompanyInfoController implements Initializable {
             editableFields();
             showDetails();
         });
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     private void loadCompany() {
         try {
+            informant.logInfo("Загрузка данных об организации");
             company = companyService.findById(1L);
         } catch (NoResultException e) {
+            informant.logInfo("Данных об организации не найдены");
             company = null;
         }
     }
 
     @FXML
-    private void editableFields() {
-        if (lockFields) {
-            labelFieldsEdit.setText(resources.getString("fields_are_editable"));
-            labelFieldsEdit.getStyleClass().setAll(StateColor.ACTIVE.getState());
-            scrollPane.setVvalue(0);
-            setLockFields(true);
-            lockFields = false;
-            edit.setText(resources.getString("lock"));
+    private void saveCompanyInfo() {
+        informant.logInfo("Процесс обновления информации об организации");
+        if (company != null) createOrUpdateCompany("update");
+        else createOrUpdateCompany("create");
+    }
+
+    private void createOrUpdateCompany(String command){
+        contain();
+        if (validator.checkWrongFields(gridPane)){
+            if (command.equals("create")) {
+                companyService.create(company);
+                informant.logInfoAndShowNotificationComplete("Данные об организации успешно созданы");
+                setLockFields();
+            }
+            else if (command.equals("update")) {
+                companyService.update(company);
+                informant.logInfoAndShowNotificationComplete("Данные об организации успешно сохранены");
+                setLockFields();
+            }
         } else {
-            labelFieldsEdit.setText(resources.getString("fields_are_not_editable_unlock_for_edit"));
-            labelFieldsEdit.getStyleClass().setAll(StateColor.ARCHIVE.getState());
-            scrollPane.setVvalue(0);
-            setLockFields(false);
-            lockFields = true;
-            edit.setText(resources.getString("unlock"));
+            informant.logInfoAndShowNotificationWarning(resources.getString("fields_have_not_correct_value"));
         }
     }
 
     @FXML
-    private void saveCompanyInfo() {
-        if (company != null) {
-            contain();
-            if (validator.checkWrongFields(gridPane)){
-                companyService.update(company);
-                editableFields();
-            } else notification.warning(resources.getString("fields_have_not_correct_value"));
-        } else {
-            contain();
-            if (validator.checkWrongFields(gridPane)) {
-                companyService.create(company);
-                editableFields();
-            } else notification.warning(resources.getString("fields_have_not_correct_value"));
+    private void editableFields() {
+        if (isLock()) setUnlockFields();
+        else setLockFields();
+    }
+
+    private boolean isLock(){
+        return lockFields;
+    }
+
+    private void setLockFields(){
+        labelFieldsEdit.setText(resources.getString("fields_are_not_editable_unlock_for_edit"));
+        labelFieldsEdit.getStyleClass().setAll(StateColor.ARCHIVE.getState());
+        edit.setText(resources.getString("unlock"));
+        scrollPane.setVvalue(0);
+        lockFieldsOnForm(true);
+        lockFields = true;
+    }
+
+    private void setUnlockFields(){
+        labelFieldsEdit.setText(resources.getString("fields_are_editable"));
+        labelFieldsEdit.getStyleClass().setAll(StateColor.ACTIVE.getState());
+        edit.setText(resources.getString("lock"));
+        scrollPane.setVvalue(0);
+        lockFieldsOnForm(false);
+        lockFields = false;
+    }
+
+    private void lockFieldsOnForm(boolean lock) {
+        for (Node node : gridPane.getChildren()) {
+            if (node instanceof TextInputControl) ((TextInputControl) node).setEditable(!lock);
+            if (node instanceof DatePicker) {
+                ((DatePicker) node).setEditable(!lock);
+                node.setOnMouseClicked(e -> {
+                    if (!((DatePicker) node).isEditable()) ((DatePicker) node).hide();
+                });
+            }
         }
     }
 
     private void contain() {
+        informant.logInfo("Сбор данных об организации с клиентской формы");
         if (company == null) company = new Company();
         company.setName(txtFieldCompanyName.getText());
         company.setLicence(txtFieldLicence.getText());
@@ -118,17 +153,6 @@ public class CompanyInfoController implements Initializable {
         company.setContact(contact);
     }
 
-    private void setLockFields(boolean lock) {
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof TextInputControl) ((TextInputControl) node).setEditable(lock);
-            if (node instanceof DatePicker) {
-                ((DatePicker) node).setEditable(lock);
-                node.setOnMouseClicked(e -> {
-                    if (!((DatePicker) node).isEditable()) ((DatePicker) node).hide();
-                });
-            }
-        }
-    }
 
     private void showDetails() {
         if (company != null) {
@@ -146,10 +170,12 @@ public class CompanyInfoController implements Initializable {
             txtAreaActualAddress.setText(company.getActualAddress());
             txtFieldPhone.setText(company.getContact().getPhone());
             txtFieldEmail.setText(company.getContact().getEmail());
-        } else editableFields();
+        }
+        else editableFields();
     }
 
     private void setValidateOnPane(){
+        informant.logInfo("Установка валидации на поля формы");
         validator.validatePane(save, gridPane);
         validator.fieldsNotNull(resources.getString("credit_organization"), 4, txtFieldCompanyName);
         validator.cyrillicAndInteger(resources.getString("prompt_registration"), txtAreaLegalAddress);

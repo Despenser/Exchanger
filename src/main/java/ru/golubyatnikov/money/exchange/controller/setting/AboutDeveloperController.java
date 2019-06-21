@@ -7,6 +7,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -25,10 +26,14 @@ public class AboutDeveloperController implements Initializable {
     @FXML private Hyperlink linkVK, linkGitHub, linkEmail;
     @FXML private ImageView imgDeveloper;
 
+    private ProjectInformant informant;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        imgDeveloper.setImage(new Image("view/style/img/common/other/developer.jpg"));
+        informant = new ProjectInformant(AboutDeveloperController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
+        imgDeveloper.setImage(new Image("view/style/img/common/other/developer.jpg"));
         labelSurname.setText(resources.getString("developer_surname"));
         labelName.setText(resources.getString("developer_name"));
         labelMiddleName.setText(resources.getString("developer_middle_name"));
@@ -38,6 +43,8 @@ public class AboutDeveloperController implements Initializable {
         linkVK.setText("https://vk.com/alex.euphoria");
         linkGitHub.setText("https://github.com/Despenser");
         linkEmail.setText("agolubyatnikov94@gmail.com");
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     @FXML
@@ -56,11 +63,13 @@ public class AboutDeveloperController implements Initializable {
     }
 
     private void openLinkInBrowser(String url){
+        informant.logInfo("Процесс открытия ссылки " + url + " в браузере");
         if(Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URI(url));
+                informant.logInfo("Ссылка " + url + " открыта в браузере");
             } catch (IOException | URISyntaxException e) {
-                e.printStackTrace();
+                informant.logErrorAndShowNotification("Во время открытия ссылки в браузере произошел сбой", e);
             }
         }
     }

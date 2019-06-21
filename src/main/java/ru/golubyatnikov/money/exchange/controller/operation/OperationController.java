@@ -49,7 +49,7 @@ public class OperationController extends AbstractController implements Initializ
         loaderFXML = LoaderFXML.getInstance();
         operations = FXCollections.observableArrayList(operationService.findAll());
 
-        if (loaderFXML.getMain().isAdmin()) toolbar.getItems().removeAll(editOperation, deleteOperation);
+        if (loaderFXML.getMain().isNotAdmin()) toolbar.getItems().removeAll(editOperation, deleteOperation);
         if (loaderFXML.getMain().getCurrentEmployee().getRole().getType().equals(loaderFXML.getMain().getRoles().get(2).getType())){
             toolbar.getItems().removeAll(addOperation, editOperation, deleteOperation);
         }

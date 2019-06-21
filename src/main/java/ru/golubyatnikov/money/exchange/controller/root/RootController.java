@@ -18,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 import ru.golubyatnikov.money.exchange.model.entity.Employee;
 import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
 import ru.golubyatnikov.money.exchange.model.util.Notification;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
+
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,19 +27,19 @@ import java.util.ResourceBundle;
 
 public class RootController implements Initializable {
 
-    private static final Logger LOG = LogManager.getLogger(RootController.class);
-
     @FXML private AnchorPane mainPane;
     @FXML private JFXHamburger hamburger;
     @FXML private JFXDrawer drawer;
     @FXML private Label labelEmployee;
 
+    private ProjectInformant informant;
     private Employee employee;
     private ResourceBundle resources;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
+        informant = new ProjectInformant(RootController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
         employee =  LoaderFXML.getInstance().getMain().getCurrentEmployee();
@@ -45,7 +47,7 @@ public class RootController implements Initializable {
         Platform.runLater(this::initUserLabel);
         Platform.runLater(this::initDrawer);
 
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     AnchorPane getMainPane() {
@@ -53,17 +55,21 @@ public class RootController implements Initializable {
     }
 
     private void initUserLabel(){
+        informant.logInfo("Установка данных о текущем пользователе");
         labelEmployee.setText(resources.getString("user") + " " + employee.getSurname() + " " + employee.getName());
     }
 
     private void initDrawer() {
-        LOG.info("Инициализация бокового меню");
-
+        informant.logInfo("Инициализация бокового меню системы");
         List<Object> params = LoaderFXML.getInstance().loadToolbar("root/toolbar");
         AnchorPane pane = (AnchorPane) params.get(0);
         ((ToolbarController) params.get(1)).setRootController(this);
         drawer.setSidePane(pane);
+        showAndCloseWindowTask();
+        informant.logInfo("Инициализация бокового меню системы - завершена");
+    }
 
+    private void showAndCloseWindowTask(){
         HamburgerSlideCloseTransition task = new HamburgerSlideCloseTransition(hamburger);
         task.setRate(-1);
 
@@ -84,9 +90,10 @@ public class RootController implements Initializable {
 
     @FXML
     private void logOut(MouseEvent event) {
+        informant.logInfo("Запрос на закрытие текущей пользовательской сессии");
         boolean result = Notification.getInstance().confirmation(resources.getString("close_session") + " " + employee.getSurname() + " " + employee.getName() + "?");
         if (result) {
-            LOG.info("Производится выход из системы на окно авторизации");
+            informant.logInfo("Производится выход из системы на окно авторизации");
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
             LoaderFXML.getInstance().loadRoot(new Stage(), "login/loginPane", resources.getString("application_name"), 419, 367, false);
         }

@@ -50,7 +50,7 @@ public class ClientController extends AbstractController implements Initializabl
         notification = Notification.getInstance();
         loaderFXML = LoaderFXML.getInstance();
 
-        if (loaderFXML.getMain().isAdmin()) toolbar.getItems().remove(deleteClient);
+        if (loaderFXML.getMain().isNotAdmin()) toolbar.getItems().remove(deleteClient);
         if (loaderFXML.getMain().getCurrentEmployee().getRole().getType().equals(loaderFXML.getMain().getRoles().get(2).getType())){
             toolbar.getItems().removeAll(addClient, editClient, deleteClient, archiveClient);
         }
