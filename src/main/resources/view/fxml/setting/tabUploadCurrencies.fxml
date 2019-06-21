@@ -9,42 +9,45 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TitledPane prefHeight="400.0" prefWidth="600.0" text="%upload_currencies" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.golubyatnikov.money.exchange.controller.setting.UploadCurrenciesController">
+<TitledPane prefHeight="400.0" prefWidth="600.0" text="%upload_currencies" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.golubyatnikov.money.exchange.controller.setting.UploadCurrenciesController">
     <font>
-        <Font name="System Bold" size="12.0" />
+        <Font name="System Bold" size="12.0"/>
     </font>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-      <children>
-         <VBox layoutX="24.0" layoutY="52.0" prefHeight="374.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-               <AnchorPane prefHeight="62.0" prefWidth="579.0">
-                  <children>
-                     <Label prefHeight="17.0" prefWidth="579.0" text="Загрузить последние имеющиеся курсы валют с сайта Центрального Банка, если актуальные курсы валют уже имеются в системе данные не будут перезаписаны" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  </children>
-                  <VBox.margin>
-                     <Insets bottom="10.0" />
-                  </VBox.margin>
-               </AnchorPane>
-               <Button mnemonicParsing="false" onAction="#upload" prefHeight="35.0" text="Загрузить актуальные курсы на текущий день">
-                  <VBox.margin>
-                     <Insets bottom="10.0" />
-                  </VBox.margin>
-               </Button>
-               <AnchorPane prefHeight="28.0" prefWidth="579.0">
-                  <children>
-                     <Separator prefHeight="3.0" prefWidth="579.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.5" />
-                  </children>
-               </AnchorPane>
-               <AnchorPane prefHeight="56.0" prefWidth="579.0">
-                  <children>
-                     <Label prefHeight="17.0" prefWidth="579.0" text="Загрузить курсы валют за последние 30 дней от текущей даты с сайта Центрального Банка, если актуальные курсы валют уже имеются в системе данные не будут перезаписаны" wrapText="true" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  </children>
-                  <VBox.margin>
-                     <Insets bottom="10.0" />
-                  </VBox.margin>
-               </AnchorPane>
-               <Button mnemonicParsing="false" onAction="#uploadForMonth" prefHeight="35.0" prefWidth="268.0" text="Загрузить курсы валют за последний месяц" />
-            </children>
-         </VBox>
-      </children></AnchorPane>
+        <VBox layoutX="24.0" layoutY="52.0" prefHeight="374.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane prefHeight="62.0" prefWidth="579.0">
+                <VBox.margin>
+                    <Insets bottom="10.0"/>
+                </VBox.margin>
+                <Label prefHeight="17.0" prefWidth="579.0"
+                       text="%upload_last_have_currencies_from_site"
+                       wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <Button mnemonicParsing="false" onAction="#upload" prefHeight="35.0"
+                    text="%upload_actual_currency_on_this_day">
+                <VBox.margin>
+                    <Insets bottom="10.0"/>
+                </VBox.margin>
+            </Button>
+            <AnchorPane prefHeight="28.0" prefWidth="579.0">
+                <Separator prefHeight="3.0" prefWidth="579.0" AnchorPane.leftAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.5"/>
+            </AnchorPane>
+            <AnchorPane prefHeight="56.0" prefWidth="579.0">
+                <VBox.margin>
+                    <Insets bottom="10.0"/>
+                </VBox.margin>
+                <Label prefHeight="17.0" prefWidth="579.0"
+                       text="%upload_currency_by_last_thirty_days_from_site"
+                       wrapText="true" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+            <Button mnemonicParsing="false" onAction="#uploadForMonth" prefHeight="35.0" prefWidth="268.0"
+                    text="%upload_currency_by_last_month"/>
+        </VBox>
+    </AnchorPane>
 </TitledPane>
