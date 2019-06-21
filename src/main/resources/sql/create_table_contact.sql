@@ -1,7 +1,0 @@
-CREATE TABLE `CONTACT` (
-  `ID`    bigint(20)  NOT NULL AUTO_INCREMENT,
-  `EMAIL` varchar(45) DEFAULT NULL,
-  `PHONE` varchar(45) NOT NULL,
-
-PRIMARY KEY (`id`)
-)
