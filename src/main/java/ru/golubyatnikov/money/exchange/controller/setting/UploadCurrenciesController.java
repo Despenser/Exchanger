@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-//TODO добавить данные из tabUploadCurrencies.fxml в ResourceBundle
+//TODO Допилить контроллер
 public class UploadCurrenciesController implements Initializable {
 
     private ActualCurrency actualCurrency;

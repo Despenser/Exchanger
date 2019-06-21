@@ -32,7 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-
+// TODO пофиксить можно вводить сумму в режиме просмотра
 public class OperationHandlerController extends AbstractModalController implements Initializable {
 
     @FXML private VBox vBoxClientButtons;
@@ -368,7 +368,7 @@ public class OperationHandlerController extends AbstractModalController implemen
                     resources.getString("email") + " " + company.getContact().getEmail();
         } catch (NoResultException e) {
             Platform.runLater(() -> notification.warning(resources.getString("need_fill_data_about_company")));
-            return null;
+            return "";
         }
     }
 }

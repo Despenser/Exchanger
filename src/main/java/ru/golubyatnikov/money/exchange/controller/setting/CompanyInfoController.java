@@ -17,7 +17,7 @@ import javax.persistence.NoResultException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
+//TODO Всплывающее уведомление при сохранении и почему то блокируются и разблокируются поля при сохранении
 public class CompanyInfoController implements Initializable {
 
     @FXML private Button edit, save;
