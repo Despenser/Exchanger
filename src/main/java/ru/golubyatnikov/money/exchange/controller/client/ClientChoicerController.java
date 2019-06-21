@@ -10,19 +10,16 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.golubyatnikov.money.exchange.controller.operation.OperationHandlerController;
 import ru.golubyatnikov.money.exchange.model.entity.Client;
 import ru.golubyatnikov.money.exchange.model.service.ClientService;
 import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class ClientChoicerController implements Initializable {
-
-    private static final Logger LOG = LogManager.getLogger(ClientChoicerController.class);
 
     @FXML private TableView<Client> tableView;
     @FXML private TableColumn<Client, String> colSurname, colName, colMiddleName;
@@ -31,12 +28,14 @@ public class ClientChoicerController implements Initializable {
 
     private OperationHandlerController operationHandlerController;
     private ObservableList<Client> noArchiveClients;
+    private ProjectInformant informant;
     private ClientService clientService;
     private ResourceBundle resources;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
+        informant = new ProjectInformant(ClientChoicerController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
         clientService = new ClientService();
@@ -54,7 +53,7 @@ public class ClientChoicerController implements Initializable {
         Platform.runLater(this::selectClient);
         Platform.runLater(this::getAll);
 
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     private void selectClient(){
@@ -62,7 +61,7 @@ public class ClientChoicerController implements Initializable {
             TableRow<Client> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    LOG.info("Выбран клиент из списка с id " + row.getItem().getId());
+                    informant.logInfo("Выбран клиент из списка с id " + row.getItem().getId());
                     addClient(event, row.getItem());
                 }
             });
@@ -87,6 +86,7 @@ public class ClientChoicerController implements Initializable {
     }
 
     private void populateTableView(ObservableList<Client> clientList) {
+        informant.logInfo("Выборка клиентов в статусе \"Активный\" и наполнение таблицы");
         noArchiveClients = FXCollections.observableArrayList();
         for (Client client: clientList) {
             if (client.getStatus().getName().equals(LoaderFXML.getInstance().getMain().getStatuses().get(0).getName()))
@@ -101,6 +101,7 @@ public class ClientChoicerController implements Initializable {
     }
 
     private void getAll() {
+        informant.logInfo("Процесс получения клиентов системы");
         populateTableView(FXCollections.observableArrayList(clientService.findAll()));
     }
 

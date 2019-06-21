@@ -8,8 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.golubyatnikov.money.exchange.controller.AbstractController;
 import ru.golubyatnikov.money.exchange.model.entity.Client;
 import ru.golubyatnikov.money.exchange.model.entity.Operation;
@@ -17,6 +15,7 @@ import ru.golubyatnikov.money.exchange.model.entity.Status;
 import ru.golubyatnikov.money.exchange.model.service.ClientService;
 import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
 import ru.golubyatnikov.money.exchange.model.util.Notification;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import ru.golubyatnikov.money.exchange.model.util.Report;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,8 +23,6 @@ import java.util.Set;
 
 
 public class ClientController extends AbstractController implements Initializable {
-
-    private static final Logger LOG = LogManager.getLogger(ClientController.class);
 
     @FXML private ToolBar toolbar;
     @FXML private TableView<Client> tableView;
@@ -37,13 +34,15 @@ public class ClientController extends AbstractController implements Initializabl
             txtFieldNumPass, txtFieldReleasedBy, txtFieldUnitCode, txtFieldBirthPlace, txtFieldRegistration, txtFieldPhone, txtFieldEmail;
 
     private ClientService clientService;
+    private ProjectInformant informant;
     private Notification notification;
     private LoaderFXML loaderFXML;
     private ResourceBundle resources;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
+        informant = new ProjectInformant(ClientController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
         clientService = new ClientService();
@@ -85,7 +84,7 @@ public class ClientController extends AbstractController implements Initializabl
 
         Platform.runLater(this::getAll);
 
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     TableView<Client> getTableView() {
@@ -94,14 +93,14 @@ public class ClientController extends AbstractController implements Initializabl
 
     @Override
     public void add(ActionEvent event) {
-        LOG.info("Открытие формы заведения клиента");
+        informant.logInfo("Открытие формы заведения клиента");
         openHandler(resources.getString("form_create_client"), event);
     }
 
     @Override
     public void view(ActionEvent event) {
         if (checkSelected(tableView, resources.getString("select_for_view_client"))) {
-            LOG.info("Открытие формы просмотра клиента");
+            informant.logInfo("Открытие формы просмотра клиента");
             openHandler(resources.getString("form_view_client"), event);
         }
     }
@@ -109,7 +108,7 @@ public class ClientController extends AbstractController implements Initializabl
     @Override
     public void edit(ActionEvent event) {
         if (checkSelected(tableView, resources.getString("select_for_edit_client"))) {
-            LOG.info("Открытие формы редактирования клиента");
+            informant.logInfo("Открытие формы редактирования клиента");
             openHandler(resources.getString("form_edit_client"), event);
         }
     }
@@ -121,14 +120,14 @@ public class ClientController extends AbstractController implements Initializabl
             if (client.getOperations().isEmpty()) {
                 boolean result = notification.confirmation(resources.getString("do_delete_client"));
                 if (result) {
-                    LOG.info("Запущена процедура удаления клиента с id " + client.getId() + ", без операций");
+                    informant.logInfo("Запущена процедура удаления клиента с id " + client.getId() + ", без операций");
                     delete(client, clientService, loaderFXML.getMain().getClients(), tableView);
                 }
             } else {
                 boolean result = notification.confirmation(resources.getString("client_has_operations"));
                 if (result) {
                     Set<Operation> operations = client.getOperations();
-                    LOG.info("Запущена процедура удаления клиента с id " + client.getId() + ", количество операций у клиента " + operations.size());
+                    informant.logInfo("Запущена процедура удаления клиента с id " + client.getId() + ", количество операций у клиента " + operations.size());
                     operations.forEach(operation -> operation.getCurrencies().clear());
                     delete(client, clientService, loaderFXML.getMain().getClients(), tableView);
                 }
@@ -151,12 +150,12 @@ public class ClientController extends AbstractController implements Initializabl
             Status archive = loaderFXML.getMain().getStatuses().get(1);
 
             if (client.getStatus().getName().equals(active.getName())) {
-                LOG.info("Смена статуса у клиента с id " + client.getId() + " на \"В архиве\"");
                 updateStatus(client, clientService, tableView, archive, resources.getString("change_client_status_on_archive"));
+                informant.logInfo("Смена статуса у клиента с id " + client.getId() + " на \"В архиве\"");
             }
             else {
-                LOG.info("Смена статуса у клиента с id " + client.getId() + " на \"Активный\"");
                 updateStatus(client, clientService, tableView, active, resources.getString("change_client_status_on_active"));
+                informant.logInfo("Смена статуса у клиента с id " + client.getId() + " на \"Активный\"");
             }
         }
     }
@@ -165,7 +164,7 @@ public class ClientController extends AbstractController implements Initializabl
     public void report() {
         if (checkSelected(tableView, resources.getString("select_for_report_client"))) {
             Client client = tableView.getSelectionModel().getSelectedItem();
-            LOG.info("Запущена генерация отчета по клиенту с id " + client.getId());
+            informant.logInfo("Запущена генерация отчета по клиенту с id " + client.getId());
             Platform.runLater(() -> Report.getInstance().clientReport(client));
         }
     }
@@ -191,7 +190,7 @@ public class ClientController extends AbstractController implements Initializabl
 
     private void show(Client client) {
         if (client != null) {
-            LOG.info("Фокус установлен на клиенте с id " + client.getId());
+            informant.logInfo("Фокус установлен на клиенте с id " + client.getId());
             txtFieldSurname.setText(client.getSurname());
             txtFieldName.setText(client.getName());
             txtFieldMiddleName.setText(client.getMiddleName());

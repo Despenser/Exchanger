@@ -7,26 +7,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.golubyatnikov.money.exchange.controller.AbstractModalController;
 import ru.golubyatnikov.money.exchange.controller.operation.OperationHandlerController;
 import ru.golubyatnikov.money.exchange.model.entity.*;
 import ru.golubyatnikov.money.exchange.model.enumirate.Mode;
 import ru.golubyatnikov.money.exchange.model.enumirate.StateColor;
 import ru.golubyatnikov.money.exchange.model.service.ClientService;
-import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
-import ru.golubyatnikov.money.exchange.model.util.Notification;
-import ru.golubyatnikov.money.exchange.model.util.Report;
-import ru.golubyatnikov.money.exchange.model.util.Validator;
-
+import ru.golubyatnikov.money.exchange.model.util.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class ClientHandlerController extends AbstractModalController implements Initializable {
-
-    private static final Logger LOG = LogManager.getLogger(ClientHandlerController.class);
 
     @FXML private Button btnAction;
     @FXML private Label labelTitle, labelStatus;
@@ -39,6 +31,7 @@ public class ClientHandlerController extends AbstractModalController implements 
 
     private ClientController clientController;
     private OperationHandlerController operationHandlerController;
+    private ProjectInformant informant;
     private ActionEvent event;
     private boolean isOperationWindow;
     private Notification notification;
@@ -51,7 +44,8 @@ public class ClientHandlerController extends AbstractModalController implements 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
+        informant = new ProjectInformant(ClientHandlerController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
         loaderFXML = LoaderFXML.getInstance();
@@ -67,7 +61,7 @@ public class ClientHandlerController extends AbstractModalController implements 
             if (mode != Mode.VIEW) setValidationOnPane();
         });
 
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     public void setEvent(ActionEvent event) {
@@ -87,7 +81,7 @@ public class ClientHandlerController extends AbstractModalController implements 
     public void checkMode() {
         switch (((Button) event.getSource()).getId()) {
             case "addClient":
-                LOG.info("Запущен режим заведения клиента");
+                informant.logInfo("Запущен режим заведения клиента");
                 mode = Mode.CREATE;
                 labelTitle.setText(resources.getString("title_create_client"));
                 btnAction.setText(resources.getString("button_create"));
@@ -96,7 +90,7 @@ public class ClientHandlerController extends AbstractModalController implements 
                 client = new Client();
                 break;
             case "editClient":
-                LOG.info("Запущен режим редактирования клиента");
+                informant.logInfo("Запущен режим редактирования клиента");
                 mode = Mode.EDIT;
                 labelTitle.setText(resources.getString("title_edit_client"));
                 btnAction.setText(resources.getString("button_edit"));
@@ -104,7 +98,7 @@ public class ClientHandlerController extends AbstractModalController implements 
                 showDetails();
                 break;
             default:
-                LOG.info("Запущен режим просмотра клиента");
+                informant.logInfo("Запущен режим просмотра клиента");
                 mode = Mode.VIEW;
                 labelTitle.setText(resources.getString("title_view_client"));
                 btnAction.setText(resources.getString("button_view"));
@@ -137,17 +131,16 @@ public class ClientHandlerController extends AbstractModalController implements 
             if (notification.confirmation(resources.getString("is_input_data_correct"))) {
                 Client client = contain();
                 if (clientService.findBySerialNumber(client.getPassport().getSerial(), client.getPassport().getNumber()) == null) {
-                    LOG.info("Создание нового клиента");
+                    informant.logInfo("Создание нового клиента");
                     clientService.create(client);
                     loaderFXML.getMain().getClients().add(client);
-                    notification.complete(resources.getString("new_client") + " " + client.getSurname() + " " + client.getName() + " " +
+                    informant.logInfoAndShowNotificationComplete(resources.getString("new_client") + " " + client.getSurname() + " " + client.getName() + " " +
                             resources.getString("successfully_created"));
                     closeWindow(event);
                     return client;
-                } else {
-                    notification.warning(resources.getString("client_with_this_passport_exist"));
-                    LOG.info("Указанные паспортные данные найдены в системе, создания клиента прервано");
                 }
+                else informant.logInfoAndShowNotificationWarning(resources.getString("client_with_this_passport_exist"));
+
             }
         } else notification.warning(resources.getString("fields_have_not_correct_value"));
         return null;
@@ -159,15 +152,13 @@ public class ClientHandlerController extends AbstractModalController implements 
             if (notification.confirmation(resources.getString("do_change_client_data"))) {
                 if (clientService.findByIdAndSerialNumber(client.getId(), Long.parseLong(txtFieldSerialPass.getText()), Long.parseLong(txtFieldNumPass.getText())) == null) {
                     contain();
-                    LOG.info("Редактирование клиента с id " + client.getId());
+                    informant.logInfo("Редактирование клиента с id " + client.getId());
                     clientService.update(client);
                     clientController.getTableView().refresh();
-                    notification.complete(resources.getString("information_about_client_successfully_updated"));
+                    informant.logInfoAndShowNotificationComplete(resources.getString("information_about_client_successfully_updated"));
                     closeWindow(event);
-                } else {
-                    notification.warning(resources.getString("client_with_this_passport_exist"));
-                    LOG.info("Указанные паспортные данные найдены в системе, редактирование клиента прервано");
                 }
+                else informant.logInfoAndShowNotificationWarning(resources.getString("client_with_this_passport_exist"));
             }
         } else notification.warning(resources.getString("fields_have_not_correct_value"));
     }
@@ -175,7 +166,7 @@ public class ClientHandlerController extends AbstractModalController implements 
     @Override
     public void report() {
         Client client = clientController.getTableView().getSelectionModel().getSelectedItem();
-        LOG.info("Запущена генерация отчета по клиенту с id " + client.getId());
+        informant.logInfo("Запущена генерация отчета по клиенту с id " + client.getId());
         Platform.runLater(() -> Report.getInstance().clientReport(client));
     }
 

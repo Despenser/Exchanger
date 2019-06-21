@@ -41,6 +41,7 @@ public class CalcController implements Initializable {
     private static final String IMG_RATE_UP = "view/style/img/currency/rateUp.png";
     private static final String IMG_RATE_DOWN = "view/style/img/currency/rateDown.png";
 
+    private ProjectInformant informant;
     private IsoCode IN, OUT;
     private Exchanger exchanger;
     private Notification notification;
@@ -49,7 +50,8 @@ public class CalcController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
+        informant = new ProjectInformant(CalcController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
         exchanger = Exchanger.getInstance();
@@ -64,6 +66,21 @@ public class CalcController implements Initializable {
         currenciesForTwoWeeks = FXCollections.observableArrayList(currencyService.currenciesForPeriod(now.minusDays(20), now));
         currenciesForTwoWeeks.sort(Comparator.comparing(Currency::getCurrencyDate));
 
+        configureAllComboBoxes();
+
+        txtField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtField.getText().isEmpty()) labelResult.setText("");
+            calculate();
+        });
+
+        Platform.runLater(this::rate);
+        Platform.runLater(this::populateChart);
+        Platform.runLater(this::calculate);
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+    }
+
+    private void configureAllComboBoxes(){
         ConfigComboBox.configComboBox(comboBoxCurrencyIn, comboBoxCurrencyOut);
 
         comboBoxCurrencyIn.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -75,17 +92,6 @@ public class CalcController implements Initializable {
             ConfigComboBox.ifSameCurrency(comboBoxCurrencyOut, comboBoxCurrencyIn,oldValue,newValue);
             calculate();
         });
-
-        txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (txtField.getText().isEmpty()) labelResult.setText("");
-            calculate();
-        });
-
-        Platform.runLater(this::rate);
-        Platform.runLater(this::populateChart);
-        Platform.runLater(this::calculate);
-
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     private void calculate() {
@@ -99,19 +105,19 @@ public class CalcController implements Initializable {
 
             if (IN != IsoCode.RUB && OUT == IsoCode.RUB && sale != null) {
                 if (rateSaleIsNotNull(sale)) {
-                    LOG.info("Производится расчет продажи валюты: " + IN.name() + " на " + OUT.name());
+                    informant.logInfo("Производится расчет продажи валюты: " + IN.name() + " за " + OUT.name());
                     labelResult.setText(DECIMAL_FORMAT.format(exchanger.buy(sale, Float.parseFloat(txtField.getText()))) + " " + resources.getString("rub"));
                 } else labelResult.setText(resources.getString("buy_rate_not_set"));
             }
             if (IN == IsoCode.RUB && OUT != IsoCode.RUB && buy != null) {
                 if (rateBuyIsNotNull(buy)) {
-                    LOG.info("Производится расчет покупки валюты: " + IN.name() + " на " + OUT.name());
+                    informant.logInfo("Производится расчет покупки валюты: " + IN.name() + " за " + OUT.name());
                     labelResult.setText(DECIMAL_FORMAT.format(exchanger.sale(buy, Float.parseFloat(txtField.getText()))) + " " + buy.getCharCode());
                 } else labelResult.setText(resources.getString("sale_rate_not_set"));
             }
             if (IN != IsoCode.RUB && OUT != IsoCode.RUB && !IN.equals(OUT) && sale != null && buy != null) {
                 if (rateBuyIsNotNull(buy) || rateSaleIsNotNull(sale)) {
-                    LOG.info("Производится расчет покупки валюты по кросс курсу: " + IN.name() + " на " + OUT.name());
+                    informant.logInfo("Производится расчет покупки валюты по кросс курсу: " + IN.name() + " за " + OUT.name());
                     labelResult.setText(DECIMAL_FORMAT.format(exchanger.cross(sale, buy, Float.parseFloat(txtField.getText()))) + " " + buy.getCharCode());
                 } else labelResult.setText(resources.getString("buy_or_sale_rate_not_set"));
             }
@@ -154,7 +160,7 @@ public class CalcController implements Initializable {
     }
 
     private void rate(){
-        LOG.info("Загрузка курсовой разницы между днями");
+        informant.logInfo("Загрузка курсовой разницы между днями");
 
         Currency USD = actualCurrencies.stream().filter(s -> s.getCharCode().equals(IsoCode.USD.name())).findAny().orElse(null);
         Currency EUR = actualCurrencies.stream().filter(s -> s.getCharCode().equals(IsoCode.EUR.name())).findAny().orElse(null);
@@ -174,11 +180,11 @@ public class CalcController implements Initializable {
             setLabelAndImg(lastButOneCNY, CNY, labelBuyCNY, labelSaleCNY, imgBuyCNY, imgSaleCNY);
         }
 
-        LOG.info("Загрузка курсовой разницы завершена");
+        informant.logInfo("Загрузка курсовой разницы завершена");
     }
 
     private void populateChart() {
-        LOG.info("Наполнение линейной диаграммы с валютами ЦБ");
+        informant.logInfo("Наполнение диаграммы валютами c курсами ЦБ");
 
         XYChart.Series<String, Number> usd = new XYChart.Series<>();
         XYChart.Series<String, Number> eur = new XYChart.Series<>();
@@ -224,6 +230,6 @@ public class CalcController implements Initializable {
             }
         }
 
-        LOG.info("Наполнение линейной завершено");
+        LOG.info("Наполнение диаграммы завершено");
     }
 }

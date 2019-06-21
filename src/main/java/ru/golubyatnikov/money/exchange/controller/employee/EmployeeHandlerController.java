@@ -12,10 +12,8 @@ import ru.golubyatnikov.money.exchange.model.entity.*;
 import ru.golubyatnikov.money.exchange.model.enumirate.Mode;
 import ru.golubyatnikov.money.exchange.model.enumirate.StateColor;
 import ru.golubyatnikov.money.exchange.model.service.EmployeeService;
-import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
-import ru.golubyatnikov.money.exchange.model.util.Notification;
-import ru.golubyatnikov.money.exchange.model.util.Report;
-import ru.golubyatnikov.money.exchange.model.util.Validator;
+import ru.golubyatnikov.money.exchange.model.util.*;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -34,6 +32,7 @@ public class EmployeeHandlerController extends AbstractModalController implement
 
     private EmployeeController employeeController;
     private ActionEvent event;
+    private ProjectInformant informant;
     private Notification notification;
     private EmployeeService employeeService;
     private LoaderFXML loaderFXML;
@@ -44,6 +43,9 @@ public class EmployeeHandlerController extends AbstractModalController implement
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        informant = new ProjectInformant(EmployeeHandlerController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
+
         this.resources = resources;
 
         loaderFXML = LoaderFXML.getInstance();
@@ -56,6 +58,8 @@ public class EmployeeHandlerController extends AbstractModalController implement
 
         Platform.runLater(this::checkMode);
         Platform.runLater(() -> { if (mode != Mode.VIEW) setValidationOnPane();});
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     public void setEvent(ActionEvent event) {
@@ -70,6 +74,7 @@ public class EmployeeHandlerController extends AbstractModalController implement
     public void checkMode() {
         switch (((Button) event.getSource()).getId()) {
             case "addEmployee":
+                informant.logInfo("Запущен режим заведения сотрудника");
                 mode = Mode.CREATE;
                 labelTitle.setText(resources.getString("title_create_employee"));
                 btnAction.setText(resources.getString("button_create"));
@@ -78,6 +83,7 @@ public class EmployeeHandlerController extends AbstractModalController implement
                 employee = new Employee();
                 break;
             case "editEmployee":
+                informant.logInfo("Запущен режим редактирования сотрудника");
                 mode = Mode.EDIT;
                 labelTitle.setText(resources.getString("title_edit_employee"));
                 btnAction.setText(resources.getString("button_edit"));
@@ -86,6 +92,7 @@ public class EmployeeHandlerController extends AbstractModalController implement
                 break;
             default:
                 mode = Mode.VIEW;
+                informant.logInfo("Запущен режим просмотра сотрудника");
                 labelTitle.setText(resources.getString("title_view_employee"));
                 btnAction.setText(resources.getString("button_view"));
                 employee = employeeController.getTableView().getSelectionModel().getSelectedItem();
@@ -107,14 +114,15 @@ public class EmployeeHandlerController extends AbstractModalController implement
                 Employee employee = contain();
                 if (employeeService.findByLoginWithoutStatus(employee.getAuth().getLogin()) == null) {
                     if (employeeService.findBySerialNumber(employee.getPassport().getSerial(), employee.getPassport().getNumber()) == null) {
+                        informant.logInfo("Создание нового сотрудника");
                         employeeService.create(employee);
                         loaderFXML.getMain().getEmployees().add(employee);
-                        notification.complete(resources.getString("new_employee") + " " + employee.getSurname() + " " + employee.getName() + " " +
+                        informant.logInfoAndShowNotificationComplete(resources.getString("new_employee") + " " + employee.getSurname() + " " + employee.getName() + " " +
                                 resources.getString("successfully_created"));
                         closeWindow(event);
                         return employee;
-                    } else notification.warning(resources.getString("employee_with_this_passport_exist"));
-                } else notification.warning(resources.getString("employee_with_this_login_exist"));
+                    } else informant.logInfoAndShowNotificationWarning(resources.getString("employee_with_this_passport_exist"));
+                } else informant.logInfoAndShowNotificationWarning(resources.getString("employee_with_this_login_exist"));
             }
         } else notification.warning(resources.getString("fields_have_not_correct_value"));
         return null;
@@ -127,19 +135,22 @@ public class EmployeeHandlerController extends AbstractModalController implement
                 if (employeeService.findByIdAndLoginWithoutStatus(employee.getId(), txtFieldLogin.getText()) == null) {
                     if (employeeService.findByIdAndSerialNumber(employee.getId(), Long.parseLong(txtFieldSerialPass.getText()), Long.parseLong(txtFieldNumPass.getText())) == null) {
                         contain();
+                        informant.logInfo("Редактирование сотрудника с id " + employee.getId());
                         employeeService.update(employee);
                         employeeController.getTableView().refresh();
-                        notification.complete(resources.getString("information_about_employee_successfully_updated"));
+                        informant.logInfoAndShowNotificationComplete(resources.getString("information_about_employee_successfully_updated"));
                         closeWindow(event);
-                    } else notification.warning(resources.getString("employee_with_this_passport_exist"));
-                } else notification.warning(resources.getString("employee_with_this_login_exist"));
+                    } else informant.logInfoAndShowNotificationWarning(resources.getString("employee_with_this_passport_exist"));
+                } else informant.logInfoAndShowNotificationWarning(resources.getString("employee_with_this_login_exist"));
             }
         } else notification.warning(resources.getString("fields_have_not_correct_value"));
     }
 
     @Override
     public void report() {
-        Report.getInstance().employeeReport(employeeController.getTableView().getSelectionModel().getSelectedItem());
+        Employee employee = employeeController.getTableView().getSelectionModel().getSelectedItem();
+        informant.logInfo("Запущена генерация отчета по сотруднику с id " + employee.getId());
+        Report.getInstance().employeeReport(employee);
     }
 
     @Override

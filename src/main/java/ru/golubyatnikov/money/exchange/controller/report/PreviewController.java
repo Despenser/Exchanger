@@ -119,10 +119,10 @@ public class PreviewController implements Initializable {
 
     @FXML
     private void save() {
+        informant.logInfo("Запущена процедура сохранения отчета");
         FileChooser fileChooser = getFileChooserWithExtensions();
         File file = fileChooser.showSaveDialog(new Stage());
         if (fileChooser.getSelectedExtensionFilter() != null && fileChooser.getSelectedExtensionFilter().getExtensions() != null) {
-            informant.logInfo("Запущена процедура сохранения отчета");
             List<String> selectedExt = fileChooser.getSelectedExtensionFilter().getExtensions();
             if (selectedExt.contains("*.pdf")) exportToFile(new JRPdfExporter(), file);
             else if (selectedExt.contains("*.docx")) exportToFile(new JRDocxExporter(), file);

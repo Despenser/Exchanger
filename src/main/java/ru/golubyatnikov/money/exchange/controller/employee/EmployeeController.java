@@ -8,17 +8,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.golubyatnikov.money.exchange.controller.AbstractController;
-import ru.golubyatnikov.money.exchange.controller.client.ClientController;
-import ru.golubyatnikov.money.exchange.model.entity.Client;
+import ru.golubyatnikov.money.exchange.controller.setting.CompanyInfoController;
 import ru.golubyatnikov.money.exchange.model.entity.Employee;
 import ru.golubyatnikov.money.exchange.model.entity.Operation;
 import ru.golubyatnikov.money.exchange.model.entity.Status;
 import ru.golubyatnikov.money.exchange.model.service.EmployeeService;
 import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
 import ru.golubyatnikov.money.exchange.model.util.Notification;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import ru.golubyatnikov.money.exchange.model.util.Report;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,8 +24,6 @@ import java.util.Set;
 
 
 public class EmployeeController extends AbstractController implements Initializable {
-
-    private static final Logger LOG = LogManager.getLogger(EmployeeController.class);
 
     @FXML private TableView<Employee> tableView;
     @FXML private DatePicker datePickerBirthday, datePickerReleased;
@@ -38,13 +34,15 @@ public class EmployeeController extends AbstractController implements Initializa
             txtFieldNumPass, txtFieldReleasedBy, txtFieldUnitCode, txtFieldBirthPlace, txtFieldRegistration, txtFieldPhone, txtFieldEmail;
 
     private EmployeeService employeeService;
+    private ProjectInformant informant;
     private Notification notification;
     private LoaderFXML loaderFXML;
     private ResourceBundle resources;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName());
+        informant = new ProjectInformant(EmployeeController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
         employeeService = new EmployeeService();
@@ -82,7 +80,7 @@ public class EmployeeController extends AbstractController implements Initializa
 
         Platform.runLater(this::getAll);
 
-        LOG.info("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     TableView<Employee> getTableView() {
@@ -91,14 +89,14 @@ public class EmployeeController extends AbstractController implements Initializa
 
     @Override
     public void add(ActionEvent event) {
-        LOG.info("Открытие формы заведения сотрудника");
+        informant.logInfo("Открытие формы заведения сотрудника");
         openHandler(resources.getString("form_create_employee"), event);
     }
 
     @Override
     public void view(ActionEvent event) {
         if (checkSelected(tableView, resources.getString("select_for_view_employee"))) {
-            LOG.info("Открытие формы просмотра сотрудника");
+            informant.logInfo("Открытие формы просмотра сотрудника");
             openHandler(resources.getString("form_view_employee"), event);
         }
     }
@@ -106,7 +104,7 @@ public class EmployeeController extends AbstractController implements Initializa
     @Override
     public void edit(ActionEvent event) {
         if (checkSelected(tableView, resources.getString("select_for_edit_employee"))) {
-            LOG.info("Открытие формы редактирования сотрудника");
+            informant.logInfo("Открытие формы редактирования сотрудника");
             openHandler(resources.getString("form_edit_employee"), event);
         }
     }
@@ -118,14 +116,14 @@ public class EmployeeController extends AbstractController implements Initializa
             if (employee.getOperations().isEmpty()) {
                 boolean result = notification.confirmation(resources.getString("do_delete_employee"));
                 if (result) {
-                    LOG.info("Запущена процедура удаления сотрудника с id " + employee.getId() + ", без операций");
+                    informant.logInfo("Запущена процедура удаления сотрудника с id " + employee.getId() + ", без операций");
                     delete(employee, employeeService, loaderFXML.getMain().getEmployees(), tableView);
                 }
             } else {
                 boolean result = notification.confirmation(resources.getString("employee_has_operations"));
                 if (result) {
                     Set<Operation> operations = employee.getOperations();
-                    LOG.info("Запущена процедура удаления сотрудника с id " + employee.getId() + ", количество операций у сотрудника " + operations.size());
+                    informant.logInfo("Запущена процедура удаления сотрудника с id " + employee.getId() + ", количество операций у сотрудника " + operations.size());
                     operations.forEach(operation -> operation.getCurrencies().clear());
                     delete(employee, employeeService, loaderFXML.getMain().getEmployees(), tableView);
                 }
@@ -148,12 +146,12 @@ public class EmployeeController extends AbstractController implements Initializa
             Status archive = loaderFXML.getMain().getStatuses().get(1);
 
             if (employee.getStatus().getName().equals(active.getName())) {
-                LOG.info("Смена статуса у сотрудника с id " + employee.getId() + " на \"В архиве\"");
                 updateStatus(employee, employeeService, tableView, archive, resources.getString("change_employee_status_on_archive"));
+                informant.logInfo("Смена статуса у сотрудника с id " + employee.getId() + " на \"В архиве\"");
             }
             else {
-                LOG.info("Смена статуса у сотрудника с id " + employee.getId() + " на \"Активный\"");
                 updateStatus(employee, employeeService, tableView, active, resources.getString("change_employee_status_on_active"));
+                informant.logInfo("Смена статуса у сотрудника с id " + employee.getId() + " на \"Активный\"");
             }
         }
     }
@@ -162,7 +160,7 @@ public class EmployeeController extends AbstractController implements Initializa
     public void report() {
         if (checkSelected(tableView, resources.getString("select_for_report_employee"))) {
             Employee employee = tableView.getSelectionModel().getSelectedItem();
-            LOG.info("Запущена генерация отчета по сотруднику с id " + employee.getId());
+            informant.logInfo("Запущена генерация отчета по сотруднику с id " + employee.getId());
             Platform.runLater(() -> Report.getInstance().employeeReport(employee));
         }
     }
@@ -188,7 +186,7 @@ public class EmployeeController extends AbstractController implements Initializa
 
     private void show(Employee employee) {
         if (employee != null) {
-            LOG.info("Фокус установлен на сотруднике с id " + employee.getId());
+            informant.logInfo("Фокус установлен на сотруднике с id " + employee.getId());
             txtFieldSurname.setText(employee.getSurname());
             txtFieldName.setText(employee.getName());
             txtFieldMiddleName.setText(employee.getMiddleName());
