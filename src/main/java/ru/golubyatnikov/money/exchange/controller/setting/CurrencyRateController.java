@@ -10,10 +10,7 @@ import ru.golubyatnikov.money.exchange.model.entity.Currency;
 import ru.golubyatnikov.money.exchange.model.enumirate.DatePattern;
 import ru.golubyatnikov.money.exchange.model.enumirate.IsoCode;
 import ru.golubyatnikov.money.exchange.model.service.CurrencyService;
-import ru.golubyatnikov.money.exchange.model.util.ConfigComboBox;
-import ru.golubyatnikov.money.exchange.model.util.DateEditor;
-import ru.golubyatnikov.money.exchange.model.util.Notification;
-import ru.golubyatnikov.money.exchange.model.util.Validator;
+import ru.golubyatnikov.money.exchange.model.util.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +30,7 @@ public class CurrencyRateController implements Initializable {
     @FXML private TableColumn<Currency, Integer> colNumCode, colNominal;
     @FXML private TableColumn<Currency, Float> colValue, colValueBuy, colValueSale;
 
+    private ProjectInformant informant;
     private CurrencyService currencyService;
     private List<Currency> allCurrency;
     private Validator validator;
@@ -40,8 +38,10 @@ public class CurrencyRateController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
+        informant = new ProjectInformant(CurrencyRateController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
+        this.resources = resources;
         currencyService = new CurrencyService();
         validator = Validator.getInstance();
         allCurrency = FXCollections.observableArrayList(currencyService.findAll());
@@ -63,6 +63,17 @@ public class CurrencyRateController implements Initializable {
         colValueBuy.setCellValueFactory(cellData -> cellData.getValue().valueBuyProperty().asObject());
         colValueSale.setCellValueFactory(cellData -> cellData.getValue().valueSaleProperty().asObject());
 
+        listenerComboBoxCurrency();
+        listenerDatePicker();
+
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showCurrencyData(newValue));
+
+        Platform.runLater(this::setValidationOnPane);
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+    }
+
+    private void listenerComboBoxCurrency(){
         comboBoxCurrency.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (dateCurrency.getValue() != null && newValue != null) {
                 List<Currency> currencyList = currenciesFilter(newValue, dateCurrency.getValue());
@@ -70,7 +81,9 @@ public class CurrencyRateController implements Initializable {
                 else populateTableView(currencyList);
             }
         });
+    }
 
+    private void listenerDatePicker(){
         dateCurrency.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && comboBoxCurrency.getValue() != null){
                 List<Currency> currencyList = currenciesFilter(comboBoxCurrency.getValue(), newValue);
@@ -78,19 +91,18 @@ public class CurrencyRateController implements Initializable {
                 populateTableView(currencyList);
             }
         });
-
-        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> show(newValue));
-
-        Platform.runLater(this::setValidationOnPane);
     }
 
     @FXML
     private void setRate() {
+        informant.logInfo("Процесс сохранения заданных курсов валют");
+
         Currency currency = tableView.getSelectionModel().getSelectedItem();
         currency.setValueBuy(Float.parseFloat(txtFieldRateBuy.getText()));
         currency.setValueSale(Float.parseFloat(txtFieldRateSale.getText()));
         currencyService.update(currency);
-        Notification.getInstance().complete(resources.getString("data_about_currency") + " " + currency.getName() + " " +
+
+        informant.logInfoAndShowNotificationComplete(resources.getString("data_about_currency") + " " + currency.getName() + " " +
                 resources.getString("on") + " " + DateEditor.formatLocalDateToString(dateCurrency.getValue(), DatePattern.PATTERN_DOT) + " " +
                 resources.getString("successfully_update") + "\n\n" +
                 resources.getString("rate_sale") + ": " + currency.getValueSale() + "\n" +
@@ -103,7 +115,7 @@ public class CurrencyRateController implements Initializable {
                 .collect(Collectors.toList());
     }
 
-    private void show(Currency currency){
+    private void showCurrencyData(Currency currency){
         if (currency != null){
             btnSetRate.setDisable(false);
             txtFieldRateCBRF.setText(String.valueOf(currency.getValue()));
@@ -116,14 +128,17 @@ public class CurrencyRateController implements Initializable {
     }
 
     private void populateTableView(List<Currency> currencyList){
+        informant.logInfo("Наполнение таблицы данными");
         tableView.setItems(FXCollections.observableArrayList(currencyList));
     }
 
     private void clearFields(TextField... fields){
+        informant.logInfo("Очистка предзаполненых полей на форме");
         for (TextField field: fields) field.clear();
     }
 
     private void setValidationOnPane(){
+        informant.logInfo("Установка валидации полей");
         validator.onlyFloat(7,5, txtFieldRateCBRF, txtFieldRateSale, txtFieldRateBuy);
     }
 }

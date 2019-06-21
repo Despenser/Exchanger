@@ -21,6 +21,7 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.*;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -39,17 +40,23 @@ public class PreviewController implements Initializable {
     @FXML private Slider zoomLevel;
 
     private double zoomFactor, imageHeight, imageWidth;
+    private ProjectInformant informant;
     private JasperPrint jasperPrint;
     private ResourceBundle resources;
     private List<Integer> pages;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        informant = new ProjectInformant(PreviewController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
+
         this.resources = resources;
 
         Platform.runLater(this::configureComponents);
         Platform.runLater(this::changeScalePage);
         Platform.runLater(this::pageTurnScroll);
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     public void setJasperPrint(JasperPrint jasperPrint) {
@@ -112,14 +119,10 @@ public class PreviewController implements Initializable {
 
     @FXML
     private void save() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(resources.getString("save_file"));
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("PDF Document", Arrays.asList("*.pdf", "*.PDF")),
-                new ExtensionFilter("DOCX Document", Arrays.asList("*.docx", "*.DOCX")),
-                new ExtensionFilter("XLSX Document", Arrays.asList("*.xlsx", "*.XLSX")));
+        FileChooser fileChooser = getFileChooserWithExtensions();
         File file = fileChooser.showSaveDialog(new Stage());
         if (fileChooser.getSelectedExtensionFilter() != null && fileChooser.getSelectedExtensionFilter().getExtensions() != null) {
+            informant.logInfo("Запущена процедура сохранения отчета");
             List<String> selectedExt = fileChooser.getSelectedExtensionFilter().getExtensions();
             if (selectedExt.contains("*.pdf")) exportToFile(new JRPdfExporter(), file);
             else if (selectedExt.contains("*.docx")) exportToFile(new JRDocxExporter(), file);
@@ -127,11 +130,23 @@ public class PreviewController implements Initializable {
         }
     }
 
+    private FileChooser getFileChooserWithExtensions(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(resources.getString("save_file"));
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("PDF Document", Arrays.asList("*.pdf", "*.PDF")),
+                new ExtensionFilter("DOCX Document", Arrays.asList("*.docx", "*.DOCX")),
+                new ExtensionFilter("XLSX Document", Arrays.asList("*.xlsx", "*.XLSX")));
+        return fileChooser;
+    }
+
     private <T extends JRAbstractExporter> void exportToFile(T exporter, File file) {
         try {
+            informant.logInfo("Процесс экспортирования отчета в файл");
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
             exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(file.getAbsolutePath()));
             exporter.exportReport();
+            informant.logInfo("Файл создан");
         } catch (JRException e) {
             e.printStackTrace();
         }
@@ -139,11 +154,12 @@ public class PreviewController implements Initializable {
 
     @FXML
     private void print() {
+        informant.logInfo("Запущена процедура печати отчета");
         Platform.runLater(()-> {
             try {
                 JasperPrintManager.printReport(jasperPrint, true);
             } catch (JRException e) {
-                e.printStackTrace();
+                informant.logErrorAndShowNotification("При печати отчета произошел сбой", e);
             }
         });
     }

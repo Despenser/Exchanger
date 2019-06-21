@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import java.io.*;
 import java.net.URL;
@@ -23,7 +22,7 @@ public class VersionController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        informant = new ProjectInformant(AboutDeveloperController.class);
+        informant = new ProjectInformant(VersionController.class);
         informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
@@ -39,19 +38,22 @@ public class VersionController implements Initializable {
         try {
             if ((new File("pom.xml")).exists()) {
                 model = reader.read(new FileReader("pom.xml"));
-                labelVersion.setText(model.getVersion());
+                getAndShowCurrentVersion(model);
             } else {
-                model = reader.read(new InputStreamReader(VersionController.class.getResourceAsStream(
-                        "/META-INF/maven/ru.golubyatnikov.money.exchange/Exchanger/pom.xml")));
-
-                String version = model.getVersion();
-                informant.logInfo("Текущая версия программы: " + version);
-                labelVersion.setText(version);
+                model = reader.read(new InputStreamReader(
+                        VersionController.class.getResourceAsStream("/META-INF/maven/ru.golubyatnikov.money.exchange/Exchanger/pom.xml")));
+                getAndShowCurrentVersion(model);
             }
-        } catch (IOException | XmlPullParserException e) {
+        } catch (Exception e) {
             String message = resources.getString("unable_to_load_current_version_of_program");
             informant.logErrorAndShowNotification(message, e);
             labelVersion.setText(message);
         }
+    }
+
+    private void getAndShowCurrentVersion(Model model){
+        String version = model.getVersion();
+        informant.logInfo("Текущая версия программы: " + version);
+        labelVersion.setText(version);
     }
 }

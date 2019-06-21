@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-//TODO Допилить контроллер
+
 public class UploadCurrenciesController implements Initializable {
 
     private ActualCurrency actualCurrency;
@@ -25,6 +25,7 @@ public class UploadCurrenciesController implements Initializable {
     @FXML
     private void upload() {
         try {
+            informant.logInfo("Запущен процесс загрузки курсов валют на текущий день");
             boolean isUpload = actualCurrency.upload();
             if (isUpload) informant.logInfoAndShowNotificationComplete("Актуальные курсы валют успешно загружены");
         } catch (IOException | JDOMException e) {
@@ -35,6 +36,7 @@ public class UploadCurrenciesController implements Initializable {
     @FXML
     private void uploadForMonth() {
         try {
+            informant.logInfo("Запущен процесс загрузки курсов валют за текущий месяц");
             boolean isUpload = actualCurrency.uploadForMonth();
             if (isUpload) informant.logInfoAndShowNotificationComplete("Курсы валют за последний месяц успешно загружены");
         } catch (IOException | JDOMException e) {

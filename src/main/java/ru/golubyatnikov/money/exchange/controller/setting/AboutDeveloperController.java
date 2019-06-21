@@ -63,13 +63,13 @@ public class AboutDeveloperController implements Initializable {
     }
 
     private void openLinkInBrowser(String url){
-        informant.logInfo("Процесс открытия ссылки " + url + " в браузере");
+        informant.logInfo("Процесс открытия ссылки " + url);
         if(Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URI(url));
-                informant.logInfo("Ссылка " + url + " открыта в браузере");
+                informant.logInfo("Ссылка " + url + " открыта");
             } catch (IOException | URISyntaxException e) {
-                informant.logErrorAndShowNotification("Во время открытия ссылки в браузере произошел сбой", e);
+                informant.logErrorAndShowNotification("Во время открытия ссылки произошел сбой", e);
             }
         }
     }

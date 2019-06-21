@@ -38,7 +38,7 @@ public class CompanyInfoController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        informant = new ProjectInformant(AboutDeveloperController.class);
+        informant = new ProjectInformant(CompanyInfoController.class);
         informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
         this.resources = resources;
