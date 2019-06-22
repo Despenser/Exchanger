@@ -24,6 +24,7 @@ public class LoaderFXML {
     private static final String FXML_EXTENSION = ".fxml";
     private static final String LOGO = "/view/style/img/common/other/logo.png";
     private static LoaderFXML instance;
+
     private Main main;
 
     private LoaderFXML() {

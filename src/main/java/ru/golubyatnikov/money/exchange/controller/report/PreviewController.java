@@ -159,7 +159,7 @@ public class PreviewController implements Initializable {
             try {
                 JasperPrintManager.printReport(jasperPrint, true);
             } catch (JRException e) {
-                informant.logErrorAndShowNotification("При печати отчета произошел сбой", e);
+                informant.logErrorAndShowNotificationWarning("При печати отчета произошел сбой", e);
             }
         });
     }

@@ -16,11 +16,11 @@ import java.math.BigInteger;
 import java.util.ResourceBundle;
 
 
-/*
-  TODO Список основных задач
-* Логирование действий
-* Валидация телефона и валидация формы заведения клиента
-* Исправить баги
+/* TODO Список основных задач
+ * Доделать логирование
+ * Валидация телефона
+ * Валидация формы заведения клиента
+ * Исправить баги
 */
 public class Main extends Application {
 
@@ -32,7 +32,7 @@ public class Main extends Application {
     private ObservableList<Role> roles;
 
     private ProjectInformant informant;
-    private AddDataToBase addDataToBase;
+    private UploadWorkDataToBase uploadWorkDataToBase;
     private Employee currentEmployee;
     private volatile boolean isAdmin;
 
@@ -89,7 +89,7 @@ public class Main extends Application {
         informant = new ProjectInformant(Main.class);
 
         Platform.runLater(Hibernate::getSessionFactory);
-        addDataToBase = AddDataToBase.getInstance();
+        uploadWorkDataToBase = UploadWorkDataToBase.getInstance();
 
         statuses = FXCollections.observableArrayList();
         roles = FXCollections.observableArrayList();
@@ -135,24 +135,24 @@ public class Main extends Application {
     private void setDataInTable(String whatPopulate) {
         switch (whatPopulate) {
             case "createRoles":
-                informant.logInfo("Процесс создания ролей");
-                addDataToBase.createRoles();
+                informant.logInfo("Запущен процесс создания ролей");
+                uploadWorkDataToBase.createRoles();
                 break;
             case "createGenders":
-                informant.logInfo("Процесс создания статусов половой принадлежности");
-                addDataToBase.createGenders();
+                informant.logInfo("Запущен процесс создания статусов половой принадлежности");
+                uploadWorkDataToBase.createGenders();
                 break;
             case "createStatuses":
-                informant.logInfo("Процесс создания статусов");
-                addDataToBase.createStatus();
+                informant.logInfo("Запущен процесс создания статусов");
+                uploadWorkDataToBase.createStatus();
                 break;
             case "createTypeOperation":
-                informant.logInfo("Процесс создания типов операций");
-                addDataToBase.createTypeOperations();
+                informant.logInfo("Запущен процесс создания типов операций");
+                uploadWorkDataToBase.createTypeOperations();
                 break;
             case "createAdmin":
-                informant.logInfo("Процесс создания учетной записи администратора");
-                addDataToBase.createAdmin();
+                informant.logInfo("Запущен процесс создания учетной записи администратора");
+                uploadWorkDataToBase.createAdmin();
                 break;
             default:
                 break;

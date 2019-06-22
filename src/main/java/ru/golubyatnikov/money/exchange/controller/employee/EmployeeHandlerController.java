@@ -13,7 +13,6 @@ import ru.golubyatnikov.money.exchange.model.enumirate.Mode;
 import ru.golubyatnikov.money.exchange.model.enumirate.StateColor;
 import ru.golubyatnikov.money.exchange.model.service.EmployeeService;
 import ru.golubyatnikov.money.exchange.model.util.*;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -150,7 +149,7 @@ public class EmployeeHandlerController extends AbstractModalController implement
     public void report() {
         Employee employee = employeeController.getTableView().getSelectionModel().getSelectedItem();
         informant.logInfo("Запущена генерация отчета по сотруднику с id " + employee.getId());
-        Report.getInstance().employeeReport(employee);
+        Platform.runLater(() -> Report.getInstance().employeeReport(employee));
     }
 
     @Override

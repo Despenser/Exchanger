@@ -69,7 +69,7 @@ public class AboutDeveloperController implements Initializable {
                 Desktop.getDesktop().browse(new URI(url));
                 informant.logInfo("Ссылка " + url + " открыта");
             } catch (IOException | URISyntaxException e) {
-                informant.logErrorAndShowNotification("Во время открытия ссылки произошел сбой", e);
+                informant.logErrorAndShowNotificationWarning("Во время открытия ссылки произошел сбой", e);
             }
         }
     }

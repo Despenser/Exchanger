@@ -15,17 +15,13 @@ public class ProjectInformant {
         notification = Notification.getInstance();
     }
 
-    public void logError(String message, Throwable throwable){
-        log.error(message, throwable);
-    }
-
     public void logInfo(String message){
         log.info(message);
     }
 
-    public void logErrorAndShowNotification(String message, Throwable throwable){
-        log.error(message, throwable);
-        notification.warning(message);
+    public void logInfoAndShowNotificationInfo(String message){
+        log.info(message);
+        notification.info(message);
     }
 
     public void logInfoAndShowNotificationWarning(String message){
@@ -36,5 +32,14 @@ public class ProjectInformant {
     public void logInfoAndShowNotificationComplete(String message){
         log.info(message);
         notification.complete(message);
+    }
+
+    public void logError(String message, Throwable throwable){
+        log.error(message, throwable);
+    }
+
+    public void logErrorAndShowNotificationWarning(String message, Throwable throwable){
+        log.error(message, throwable);
+        notification.warning(message);
     }
 }

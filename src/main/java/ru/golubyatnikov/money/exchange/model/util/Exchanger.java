@@ -6,7 +6,6 @@ import ru.golubyatnikov.money.exchange.model.entity.Currency;
 
 public class Exchanger {
 
-
     private static volatile Exchanger instance;
 
     private Exchanger() {

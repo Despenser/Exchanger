@@ -32,7 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-// TODO пофиксить можно вводить сумму в режиме просмотра
+
 public class OperationHandlerController extends AbstractModalController implements Initializable {
 
     @FXML private VBox vBoxClientButtons;
@@ -49,6 +49,7 @@ public class OperationHandlerController extends AbstractModalController implemen
     private static final Float RATE_IS_NULL = 0.0F;
     private OperationController operationController;
     private OperationService operationService;
+    private ProjectInformant informant;
     private Notification notification;
     private LoaderFXML loaderFXML;
     private ResourceBundle resources;
@@ -66,8 +67,10 @@ public class OperationHandlerController extends AbstractModalController implemen
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
+        informant = new ProjectInformant(OperationHandlerController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
+        this.resources = resources;
         loaderFXML = LoaderFXML.getInstance();
         validator = Validator.getInstance();
         notification = Notification.getInstance();
@@ -84,6 +87,19 @@ public class OperationHandlerController extends AbstractModalController implemen
 
         datePickerDate.setOnMouseClicked(e -> { if (!datePickerDate.isEditable()) datePickerDate.hide(); });
 
+        configureAllComboBoxes();
+
+        txtFieldSumIn.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtFieldSumIn.getText().isEmpty()) txtFieldSumOut.setText(String.valueOf(RATE_IS_NULL));
+            else calculation();
+        });
+
+        Platform.runLater(this::checkMode);
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
+    }
+
+    private void configureAllComboBoxes(){
         ConfigComboBox.configComboBox(comboBoxCurrencyIn, comboBoxCurrencyOut);
         comboBoxCurrencyIn.getSelectionModel().clearSelection();
         comboBoxCurrencyOut.getSelectionModel().clearSelection();
@@ -106,14 +122,6 @@ public class OperationHandlerController extends AbstractModalController implemen
             if (!comboBoxCurrencyIn.getSelectionModel().isEmpty() && !comboBoxCurrencyOut.getSelectionModel().isEmpty())
                 calculation();
         });
-
-        txtFieldSumIn.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (txtFieldSumIn.getText().isEmpty()) txtFieldSumOut.setText(String.valueOf(RATE_IS_NULL));
-            else calculation();
-        });
-
-        Platform.runLater(this::checkMode);
-        Platform.runLater(() -> { if (mode != Mode.VIEW) setValidationOnPane();});
     }
 
     void setEvent(Event event) {
@@ -136,6 +144,7 @@ public class OperationHandlerController extends AbstractModalController implemen
     public void checkMode() {
         switch (((Button) event.getSource()).getId()) {
             case "addOperation":
+                informant.logInfo("Запущен режим заведения операции");
                 mode = Mode.CREATE;
                 labelTitle.setText(resources.getString("form_create_operation"));
                 btnAction.setText(resources.getString("button_create"));
@@ -150,8 +159,10 @@ public class OperationHandlerController extends AbstractModalController implemen
                 txtAreaEmployee.setText(employee.getSurname() + " " + employee.getName() + " " + employee.getMiddleName());
                 txtAreaCompany.setText(getCompanyData());
                 setRestrictions();
+                setValidationOnPane();
                 break;
             case "editOperation":
+                informant.logInfo("Запущен режим редактирования операции");
                 mode = Mode.EDIT;
                 labelTitle.setText(resources.getString("form_edit_operation"));
                 btnAction.setText(resources.getString("button_edit"));
@@ -159,14 +170,16 @@ public class OperationHandlerController extends AbstractModalController implemen
                 client = operation.getClient();
                 showDetails();
                 setRestrictions();
+                setValidationOnPane();
                 break;
             default:
+                informant.logInfo("Запущен режим просмотра операции");
                 mode = Mode.VIEW;
                 labelTitle.setText(resources.getString("form_view_operation"));
                 btnAction.setText(resources.getString("button_view"));
                 operation = operationController.getTableView().getSelectionModel().getSelectedItem();
-                lockFields(true, gridPaneFirst, gridPaneSecond);
                 showDetails();
+                lockFields(true, gridPaneFirst, gridPaneSecond);
                 break;
         }
     }
@@ -183,9 +196,10 @@ public class OperationHandlerController extends AbstractModalController implemen
                 operation = contain();
                 report();
                 if (notification.confirmation(resources.getString("are_documents_signed"))) {
+                    informant.logInfo("Создание новой операции");
                     operationService.create(operation);
                     operationController.getOperations().add(operation);
-                    notification.complete(resources.getString("operation") + " " + operation.getCode() + " " +
+                    informant.logInfoAndShowNotificationComplete(resources.getString("operation") + " " + operation.getCode() + " " +
                             resources.getString("operation_successfully_created"));
                     closeWindow(event);
                     return operation;
@@ -200,9 +214,10 @@ public class OperationHandlerController extends AbstractModalController implemen
         if (validate(gridPaneFirst, gridPaneSecond)) {
             if (notification.confirmation(resources.getString("do_change_operation_data"))) {
                 Operation operation = contain();
+                informant.logInfo("Редактирование операции с id " + operation.getId());
                 operationService.update(operation);
                 operationController.getTableView().refresh();
-                notification.complete(resources.getString("information_about_operation_successfully_updated"));
+                informant.logInfoAndShowNotificationComplete(resources.getString("information_about_operation_successfully_updated"));
                 closeWindow(event);
             }
         } else notification.warning(resources.getString("fields_have_not_correct_value"));
@@ -210,6 +225,7 @@ public class OperationHandlerController extends AbstractModalController implemen
 
     @Override
     public void report() {
+        informant.logInfo("Запущена генерация отчета по операции с id " + operation.getId());
         Platform.runLater(() -> Report.getInstance().operationReport(resources.getString("statement_of_operation") + " " +
                 operation.getCode(), operation.getClient(), operation.getEmployee(), operation));
     }
@@ -273,6 +289,7 @@ public class OperationHandlerController extends AbstractModalController implemen
 
     @FXML
     private void chooseClient() {
+        informant.logInfo("Открытие формы выбора клиента");
         ClientChoicerController controller = loaderFXML.loadModalWindow("client/choicerClient",
                 resources.getString("form_choice_client"), false);
         controller.setOperationHandlerController(this);
@@ -280,6 +297,7 @@ public class OperationHandlerController extends AbstractModalController implemen
 
     @FXML
     private void addClient(ActionEvent event) {
+        informant.logInfo("Открытие формы заведения клиента");
         ClientHandlerController controller = loaderFXML.loadModalWindow("client/editorClient",
                 resources.getString("form_create_client"), false);
         controller.setController(this);
@@ -295,6 +313,7 @@ public class OperationHandlerController extends AbstractModalController implemen
     }
 
     private Long generateUniqueId() {
+        informant.logInfo("Генерация id операции");
         long val;
         do {
             final UUID uid = UUID.randomUUID();
@@ -341,13 +360,16 @@ public class OperationHandlerController extends AbstractModalController implemen
 
         if (!txtFieldSumIn.getText().isEmpty()) {
             if (IN != IsoCode.RUB && OUT == IsoCode.RUB && currencyIn != null && rateBuyIsNotNull(currencyIn)) {
+                informant.logInfo("Производится расчет продажи валюты: " + IN.name() + " за " + OUT.name());
                 txtFieldSumOut.setText(DECIMAL_FORMAT.format(exchanger.buy(currencyIn, Float.parseFloat(txtFieldSumIn.getText()))));
             }
             if (IN == IsoCode.RUB && OUT != IsoCode.RUB && currencyOut != null && rateSaleIsNotNull(currencyOut)) {
+                informant.logInfo("Производится расчет покупки валюты: " + IN.name() + " за " + OUT.name());
                 txtFieldSumOut.setText(DECIMAL_FORMAT.format(exchanger.sale(currencyOut, Float.parseFloat(txtFieldSumIn.getText()))));
             }
             if (IN != IsoCode.RUB && OUT != IsoCode.RUB && !IN.equals(OUT) && currencyOut != null && currencyIn != null
                     && (rateBuyIsNotNull(currencyIn) || rateSaleIsNotNull(currencyOut))) {
+                informant.logInfo("Производится расчет покупки валюты по кросс курсу: " + IN.name() + " за " + OUT.name());
                 txtFieldSumOut.setText(DECIMAL_FORMAT.format(exchanger.cross(currencyIn, currencyOut, Float.parseFloat(txtFieldSumIn.getText()))));
             }
         }
@@ -367,7 +389,7 @@ public class OperationHandlerController extends AbstractModalController implemen
                     resources.getString("phone") + " " + company.getContact().getPhone() + "\n" +
                     resources.getString("email") + " " + company.getContact().getEmail();
         } catch (NoResultException e) {
-            Platform.runLater(() -> notification.warning(resources.getString("need_fill_data_about_company")));
+            Platform.runLater(() -> informant.logErrorAndShowNotificationWarning(resources.getString("need_fill_data_about_company"), e));
             return "";
         }
     }

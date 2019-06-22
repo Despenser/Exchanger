@@ -23,13 +23,14 @@ public class UploadCurrenciesController implements Initializable {
     }
 
     @FXML
-    private void upload() {
+    private void uploadForToday() {
         try {
             informant.logInfo("Запущен процесс загрузки курсов валют на текущий день");
-            boolean isUpload = actualCurrency.upload();
+            boolean isUpload = actualCurrency.uploadForToday();
             if (isUpload) informant.logInfoAndShowNotificationComplete("Актуальные курсы валют успешно загружены");
+            else informant.logInfoAndShowNotificationInfo("Курсы валют не были загружены в базу, проверьте справочник валют на актуальность");
         } catch (IOException | JDOMException e) {
-            informant.logErrorAndShowNotification("При загрузке курсов произошел сбой", e);
+            informant.logErrorAndShowNotificationWarning("При загрузке курсов произошел сбой", e);
         }
     }
 
@@ -39,8 +40,9 @@ public class UploadCurrenciesController implements Initializable {
             informant.logInfo("Запущен процесс загрузки курсов валют за текущий месяц");
             boolean isUpload = actualCurrency.uploadForMonth();
             if (isUpload) informant.logInfoAndShowNotificationComplete("Курсы валют за последний месяц успешно загружены");
+            else informant.logInfoAndShowNotificationInfo("Курсы валют не были загружены в базу, проверьте справочник валют на актуальность");
         } catch (IOException | JDOMException e) {
-            informant.logErrorAndShowNotification("При загрузке курсов произошел сбой", e);
+            informant.logErrorAndShowNotificationWarning("При загрузке курсов произошел сбой", e);
         }
     }
 }

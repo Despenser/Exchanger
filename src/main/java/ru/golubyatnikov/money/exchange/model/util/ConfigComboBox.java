@@ -42,9 +42,12 @@ public class ConfigComboBox extends ListCell<IsoCode> {
 
     public static void ifSameCurrency(ComboBox<IsoCode> first, ComboBox<IsoCode> second, IsoCode oldValue, IsoCode newValue){
         if (!second.getSelectionModel().isEmpty() && second.getSelectionModel().getSelectedItem().equals(newValue)){
+
             if (oldValue != null) second.getSelectionModel().select(oldValue);
-            else if (second.getSelectionModel().isSelected(second.getItems().size() - 1) && !first.getSelectionModel().isEmpty()) second.getSelectionModel().selectPrevious();
+            else if (second.getSelectionModel().isSelected(second.getItems().size() - 1) && !first.getSelectionModel().isEmpty())
+                second.getSelectionModel().selectPrevious();
             else second.getSelectionModel().selectNext();
+
             first.getSelectionModel().select(newValue);
         }
     }

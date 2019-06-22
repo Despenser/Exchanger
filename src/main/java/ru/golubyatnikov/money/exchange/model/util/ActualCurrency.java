@@ -40,34 +40,91 @@ public class ActualCurrency {
     }
 
     public void uploadForTodayOrMonth() throws IOException, JDOMException {
-        upload();
-        uploadForMonth();
-    }
-
-    public boolean upload() throws IOException, JDOMException {
-        if (!isEmptyCurrencyBase()){
-            List<Currency> actualCurrencies = loadCurrenciesFromSite(getLocalDateNow());
-            checkAndUploadCurrencies(actualCurrencies, currencyService.findLastDate());
-        }
-        return true;
-    }
-
-    //TODO проверять что курсы уже есть в базе (загружает повторно ДУБЛИКАТЫ)
-    public boolean uploadForMonth() throws IOException, JDOMException {
-        if (isEmptyCurrencyBase()) {
-            List<Currency> listCurrencies = loadCurrenciesFromSite(getLocalDateNow().minusDays(30));
-            listCurrencies.forEach(currency -> currencyService.create(currency));
-            for (int i = 30; i >= 1; i--) {
-                List<Currency> list = loadCurrenciesFromSite(getLocalDateNow().minusDays(i));
-                List<Currency> last = currencyService.findLastDate();
-                checkAndUploadCurrencies(list, last);
-            }
-        }
-        return true;
+        if (isEmptyCurrencyBase()) uploadForMonth();
+        else uploadForToday();
     }
 
     private boolean isEmptyCurrencyBase() {
         return currencyService.isEmptyTable().equals(new BigInteger("0"));
+    }
+
+    private LocalDate getLocalDateNow() {
+        return LocalDate.now();
+    }
+
+    public boolean uploadForMonth() throws IOException, JDOMException {
+        List<List<Currency>> listCurrenciesForMonth = new ArrayList<>();
+        for (int i = 30; i >= 0; i--) {
+            List<Currency> list = loadCurrenciesFromSite(getLocalDateNow().minusDays(i));
+            listCurrenciesForMonth.add(list);
+        }
+        return checkAndUploadForMonth(listCurrenciesForMonth);
+    }
+
+    private boolean checkAndUploadForMonth(List<List<Currency>> currenciesForMonth) {
+        if (currenciesForMonth.isEmpty()) return false;
+
+        List<Currency> currenciesInBase = currencyService.findAll();
+        if (currenciesInBase.isEmpty()) {
+            currenciesForMonth.forEach(listCurrency -> listCurrency.forEach(currency -> currencyService.create(currency)));
+            return true;
+        }
+        else {
+            for (Currency currencyInBase : currenciesInBase) {
+                for (List<Currency> currencyList : currenciesForMonth) {
+                    currencyList.removeIf(currency -> isSameCurrencies(currency, currencyInBase));
+                }
+            }
+            currenciesForMonth.removeIf(list -> list.size() == 0);
+
+            if (!currenciesForMonth.isEmpty()) {
+                currenciesForMonth.forEach(listCurrencies -> listCurrencies.forEach(currency -> {
+                    currencyService.create(currency);
+                }));
+                return true;
+            }
+            else return false;
+        }
+    }
+
+    public boolean uploadForToday() throws IOException, JDOMException {
+        List<Currency> actualCurrencies = loadCurrenciesFromSite(getLocalDateNow());
+        return checkAndUploadForToday(actualCurrencies);
+    }
+
+    private boolean checkAndUploadForToday(List<Currency> actualCurrencies) {
+        if (actualCurrencies.isEmpty()) return false;
+
+        List<Currency> currenciesInBase = currencyService.findAll();
+        if (currenciesInBase.isEmpty()) {
+            actualCurrencies.forEach(currency -> currencyService.create(currency));
+            return true;
+        }
+        else {
+            List<Currency> lastCurrencies = currencyService.findLastDate();
+
+            Currency actual = actualCurrencies.get(0);
+            Currency lastInBase = lastCurrencies.get(0);
+
+            boolean result = isSameCurrencies(actual, lastInBase);
+
+            if (!result) {
+                actualCurrencies.forEach(currency -> currencyService.create(currency));
+                return true;
+            }
+            else return false;
+        }
+    }
+
+    private boolean isSameCurrencies(Currency actual, Currency lastInBase){
+        LocalDate actualDate = actual.getCurrencyDate();
+        float actualValue = actual.getValue();
+
+        LocalDate lastDateInBase = lastInBase.getCurrencyDate();
+        float lastValueInBase = lastInBase.getValue();
+
+        if (!actualDate.equals(lastDateInBase)) return false;
+        else return !actualDate.equals(lastDateInBase) || !(actualValue != lastValueInBase);
     }
 
     private List<Currency> loadCurrenciesFromSite(LocalDate date) throws IOException, JDOMException {
@@ -91,24 +148,5 @@ public class ActualCurrency {
             }
         }
         return currencies;
-    }
-
-    private LocalDate getLocalDateNow() {
-        return LocalDate.now();
-    }
-
-    //TODO сделать boolean
-    private void checkAndUploadCurrencies(List<Currency> actualCurrencies, List<Currency> lastCurrencies) {
-        if (!actualCurrencies.isEmpty()) {
-            LocalDate actualDate = actualCurrencies.get(0).getCurrencyDate();
-            LocalDate lastDateInBase = lastCurrencies.get(0).getCurrencyDate();
-            float actualValue = actualCurrencies.get(0).getValue();
-            float lastValue = lastCurrencies.get(0).getValue();
-
-            if (!actualDate.equals(lastDateInBase))
-                actualCurrencies.forEach(currency -> currencyService.create(currency));
-            else if (actualDate.equals(lastDateInBase) && actualValue != lastValue)
-                actualCurrencies.forEach(currency -> currencyService.create(currency));
-        }
     }
 }

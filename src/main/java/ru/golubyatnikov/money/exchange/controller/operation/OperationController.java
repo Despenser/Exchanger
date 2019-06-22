@@ -13,6 +13,7 @@ import ru.golubyatnikov.money.exchange.model.entity.Operation;
 import ru.golubyatnikov.money.exchange.model.service.OperationService;
 import ru.golubyatnikov.money.exchange.model.util.LoaderFXML;
 import ru.golubyatnikov.money.exchange.model.util.Notification;
+import ru.golubyatnikov.money.exchange.model.util.ProjectInformant;
 import ru.golubyatnikov.money.exchange.model.util.Report;
 import java.net.URL;
 import java.time.LocalDate;
@@ -36,14 +37,17 @@ public class OperationController extends AbstractController implements Initializ
 
     private ObservableList<Operation> operations;
     private OperationService operationService;
+    private ProjectInformant informant;
     private Notification notification;
     private LoaderFXML loaderFXML;
     private ResourceBundle resources;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
+        informant = new ProjectInformant(OperationController.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
 
+        this.resources = resources;
         operationService = new OperationService();
         notification = Notification.getInstance();
         loaderFXML = LoaderFXML.getInstance();
@@ -82,6 +86,7 @@ public class OperationController extends AbstractController implements Initializ
 
         Platform.runLater(this::getAll);
 
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
     TableView<Operation> getTableView() {
@@ -98,19 +103,25 @@ public class OperationController extends AbstractController implements Initializ
 
     @Override
     public void add(ActionEvent event) {
+        informant.logInfo("Открытие формы заведения операции");
         openHandler(resources.getString("form_create_operation"), event);
     }
 
     @Override
     public void view(ActionEvent event) {
-        if (checkSelected(tableView, resources.getString("select_for_view_operation")))
+        if (checkSelected(tableView, resources.getString("select_for_view_operation"))) {
+            informant.logInfo("Открытие формы просмотра операции");
             openHandler(resources.getString("form_view_operation"), event);
+        }
     }
 
     @Override
     public void edit(ActionEvent event) {
-        if (checkSelected(tableView, resources.getString("select_for_edit_operation")))
+        if (checkSelected(tableView, resources.getString("select_for_edit_operation"))) {
+            informant.logInfo("Открытие формы редактирования операции");
             openHandler(resources.getString("form_edit_operation"), event);
+        }
+
     }
 
     @Override
@@ -119,6 +130,8 @@ public class OperationController extends AbstractController implements Initializ
             Operation operation = tableView.getSelectionModel().getSelectedItem();
             boolean result = notification.confirmation(resources.getString("do_delete_operation") + " " + operation.getCode() + " ?");
             if (result) {
+                informant.logInfo("Запущена процедура удаления операции с id " + operation.getId() + ", клиент: " +
+                        operation.getClient().getSurname() + " " + operation.getClient().getName());
                 operation.getCurrencies().clear();
                 delete(operation, operationService, operations, tableView);
             }
@@ -136,6 +149,7 @@ public class OperationController extends AbstractController implements Initializ
     public void report() {
         if (checkSelected(tableView, resources.getString("select_for_report_operation"))) {
             Operation operation = tableView.getSelectionModel().getSelectedItem();
+            informant.logInfo("Запущена генерация отчета по операции с id " + operation.getId());
             Platform.runLater(() -> Report.getInstance().operationReport(resources.getString("statement_of_operation") + " " +
                             operation.getCode(), operation.getClient(), operation.getEmployee(), operation));
         }

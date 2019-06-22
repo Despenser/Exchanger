@@ -46,7 +46,7 @@ public class VersionController implements Initializable {
             }
         } catch (Exception e) {
             String message = resources.getString("unable_to_load_current_version_of_program");
-            informant.logErrorAndShowNotification(message, e);
+            informant.logErrorAndShowNotificationWarning(message, e);
             labelVersion.setText(message);
         }
     }

@@ -27,7 +27,7 @@
                        wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
             </AnchorPane>
-            <Button mnemonicParsing="false" onAction="#upload" prefHeight="35.0"
+            <Button mnemonicParsing="false" onAction="#uploadForToday" prefHeight="35.0"
                     text="%upload_actual_currency_on_this_day">
                 <VBox.margin>
                     <Insets bottom="10.0"/>

@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import ru.golubyatnikov.money.exchange.controller.AbstractController;
-import ru.golubyatnikov.money.exchange.controller.setting.CompanyInfoController;
 import ru.golubyatnikov.money.exchange.model.entity.Employee;
 import ru.golubyatnikov.money.exchange.model.entity.Operation;
 import ru.golubyatnikov.money.exchange.model.entity.Status;

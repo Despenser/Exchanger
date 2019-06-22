@@ -126,6 +126,11 @@ public class Validator {
         commonValidator(promptText, field, "^\\p{IsCyrillic}+$", "[^\\p{IsCyrillic}+$]");
     }
 
+    public <T extends TextInputControl> void cyrillicOrNothing(String promptText, T field) {
+        // TODO либо кирилица либо ничего
+        // commonValidator(promptText, field, "^\\p{IsCyrillic}+$", "[^\\p{IsCyrillic}+$]");
+    }
+
     public <T extends TextInputControl> void cyrillicAndDash(String promptText, T field) {
         commonValidator(promptText, field, "^[а-яёА-ЯЁ]+[-?]?[а-яёА-ЯЁ]+$",
                 "[^[a-zA-Z0-9~;:`!@#№\\$\\%\\^&\\*\\(\\)_+=\\{\\}\\[\\]><\\?/|\\.,'\"]*$]");

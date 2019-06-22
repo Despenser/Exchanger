@@ -230,7 +230,7 @@ public class ClientHandlerController extends AbstractModalController implements 
 
     @Override
     public void setValidationOnPane() {
-        //TODO валидация телефона
+        //TODO переделать валидацию под не резидентов + валидация телефона
         validator.validatePane(btnAction, gridPaneFirst, gridPaneSecond);
         validator.cyrillicAndDash(resources.getString("prompt_surname"), txtFieldSurname);
         validator.onlyCyrillic(resources.getString("prompt_name"), txtFieldName);

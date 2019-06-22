@@ -6,33 +6,41 @@ import ru.golubyatnikov.money.exchange.model.service.*;
 import java.time.LocalDate;
 
 
-public class AddDataToBase {
+public class UploadWorkDataToBase {
 
+    private ProjectInformant informant;
     private static EmployeeService employeeService;
     private static TypeOperationService typeOperationService;
     private static GenderService genderService;
     private static RoleService roleService;
     private static StatusService statusService;
-    private static AddDataToBase instance;
+    private static UploadWorkDataToBase instance;
 
-    private AddDataToBase() {
+    private UploadWorkDataToBase() {
+        informant = new ProjectInformant(UploadWorkDataToBase.class);
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName());
+
         employeeService = new EmployeeService();
         typeOperationService = new TypeOperationService();
         genderService = new GenderService();
         roleService = new RoleService();
         statusService = new StatusService();
+
+        informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
-    public static AddDataToBase getInstance() {
+    public static UploadWorkDataToBase getInstance() {
         if (instance == null) {
-            synchronized (AddDataToBase.class) {
-                if (instance == null) instance = new AddDataToBase();
+            synchronized (UploadWorkDataToBase.class) {
+                if (instance == null) instance = new UploadWorkDataToBase();
             }
         }
         return instance;
     }
 
     public void createStatus() {
+        informant.logInfo("Создание статусов, используемых в системе");
+
         Status active = new Status();
         active.setName("Активный");
 
@@ -41,9 +49,13 @@ public class AddDataToBase {
 
         statusService.create(active);
         statusService.create(archive);
+
+        informant.logInfo("Создание статусов - завершено");
     }
 
     public void createTypeOperations() {
+        informant.logInfo("Создание типов операций, используемых в системе");
+
         TypeOperation buy = new TypeOperation();
         buy.setType("Покупка");
 
@@ -56,9 +68,13 @@ public class AddDataToBase {
         typeOperationService.create(buy);
         typeOperationService.create(sale);
         typeOperationService.create(cross);
+
+        informant.logInfo("Создание типов операций - завершено");
     }
 
     public void createGenders() {
+        informant.logInfo("Создание гендерных данных, используемых в системе");
+
         Gender male = new Gender();
         male.setType("Мужской");
 
@@ -67,9 +83,13 @@ public class AddDataToBase {
 
         genderService.create(male);
         genderService.create(female);
+
+        informant.logInfo("Создание гендерных данных - завершено");
     }
 
     public void createRoles() {
+        informant.logInfo("Создание ролей, используемых в системе");
+
         Role admin = new Role();
         admin.setType("Администратор");
 
@@ -82,9 +102,12 @@ public class AddDataToBase {
         roleService.create(admin);
         roleService.create(user);
         roleService.create(audit);
+
+        informant.logInfo("Создание ролей - завершено");
     }
 
     public void createAdmin() {
+        informant.logInfo("Создание учетной записи администратора");
         Employee employee = new Employee();
         employee.setSurname("Администратор");
         employee.setName("");
@@ -116,5 +139,7 @@ public class AddDataToBase {
         employee.setStatus(statusService.findById(1L));
 
         employeeService.create(employee);
+
+        informant.logInfo("Создание учетной записи администратора - завершено");
     }
 }
