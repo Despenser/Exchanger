@@ -24,7 +24,7 @@ public class CurrencyService extends GenericService<Currency> {
     }
 
     public List<Currency> currenciesForPeriod(LocalDate from, LocalDate till) {
-        String query = "select * from currency where currencyDate between :text1 and value = :text2 and charCode = :text3";
+        String query = "select * from currency where currencyDate between :text1 and :text2";
         return customQuery(query, Currency.class, from, till);
     }
 
