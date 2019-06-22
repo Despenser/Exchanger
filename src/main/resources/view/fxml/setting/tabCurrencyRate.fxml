@@ -12,27 +12,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TitledPane prefHeight="502.0" prefWidth="836.0" text="%adjustment_of_exchange_rates"
+<TitledPane prefHeight="653.0" prefWidth="978.0" text="%adjustment_of_exchange_rates"
             xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.golubyatnikov.money.exchange.controller.setting.CurrencyRateController">
     <font>
         <Font name="System Bold" size="12.0"/>
     </font>
     <VBox prefHeight="200.0" prefWidth="100.0">
-        <GridPane maxHeight="76.0" maxWidth="748.0" prefHeight="76.0" prefWidth="748.0">
+        <GridPane maxHeight="76.0" maxWidth="955.0" prefHeight="76.0" prefWidth="955.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="10.0" prefWidth="112.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="123.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="221.0" minWidth="10.0" prefWidth="112.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="0.0" prefWidth="110.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="112.0" minWidth="10.0" prefWidth="112.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="131.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="116.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="10.0" prefWidth="147.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="128.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -51,36 +51,36 @@
                 </Label>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="1">
-                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="96.0"
-                       text="%date" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="96.0" text="%date"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0">
                     <font>
                         <Font name="System Bold" size="12.0"/>
                     </font>
                 </Label>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="2">
-                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="96.0"
-                       text="%rate_cbrf" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="96.0" text="%rate_cbrf"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0">
                     <font>
                         <Font name="System Bold" size="12.0"/>
                     </font>
                 </Label>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="3">
-                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="96.0"
-                       text="%rate_sale" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="96.0" text="%rate_sale"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0">
                     <font>
                         <Font name="System Bold" size="12.0"/>
                     </font>
                 </Label>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="4">
-                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="97.0"
-                       text="%rate_buy" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="97.0" text="%rate_buy"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0">
                     <font>
                         <Font name="System Bold" size="12.0"/>
                     </font>
@@ -91,8 +91,7 @@
                     <Insets right="5.0"/>
                 </GridPane.margin>
             </ComboBox>
-            <DatePicker fx:id="dateCurrency" prefHeight="30.0" GridPane.columnIndex="1"
-                        GridPane.rowIndex="1">
+            <DatePicker fx:id="dateCurrency" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <GridPane.margin>
                     <Insets left="5.0" right="5.0"/>
                 </GridPane.margin>
@@ -115,10 +114,22 @@
                     <Insets left="5.0" right="5.0"/>
                 </GridPane.margin>
             </TextField>
-            <Button fx:id="btnSetRate" mnemonicParsing="false" onAction="#setRate" prefHeight="30.0"
-                    prefWidth="106.0" text="%install" GridPane.columnIndex="5" GridPane.rowIndex="1">
+            <Button fx:id="btnSetRate" mnemonicParsing="false" onAction="#setRate" prefHeight="30.0" prefWidth="106.0"
+                    text="%install" GridPane.columnIndex="5" GridPane.rowIndex="1">
                 <GridPane.margin>
-                    <Insets left="15.0"/>
+                    <Insets left="5.0"/>
+                </GridPane.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#searchByFilter" prefHeight="30.0" prefWidth="139.0"
+                    text="Искать валюта + дата" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                <GridPane.margin>
+                    <Insets left="5.0"/>
+                </GridPane.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#showAll" prefHeight="30.0" prefWidth="106.0" text="Показать все"
+                    GridPane.columnIndex="7" GridPane.rowIndex="1">
+                <GridPane.margin>
+                    <Insets left="5.0"/>
                 </GridPane.margin>
             </Button>
         </GridPane>
@@ -137,14 +148,5 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
         </TableView>
-        <HBox>
-            <VBox.margin>
-                <Insets bottom="5.0" top="10.0"/>
-            </VBox.margin>
-            <Pane HBox.hgrow="ALWAYS"/>
-        </HBox>
-        <HBox layoutX="20.0" layoutY="471.0">
-            <Pane HBox.hgrow="ALWAYS"/>
-        </HBox>
     </VBox>
 </TitledPane>

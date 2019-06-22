@@ -63,9 +63,6 @@ public class CurrencyRateController implements Initializable {
         colValueBuy.setCellValueFactory(cellData -> cellData.getValue().valueBuyProperty().asObject());
         colValueSale.setCellValueFactory(cellData -> cellData.getValue().valueSaleProperty().asObject());
 
-        listenerComboBoxCurrency();
-        listenerDatePicker();
-
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showCurrencyData(newValue));
 
         Platform.runLater(this::setValidationOnPane);
@@ -73,24 +70,28 @@ public class CurrencyRateController implements Initializable {
         informant.logInfo("Инициализация класса " + this.getClass().getSimpleName() + " завершена");
     }
 
-    private void listenerComboBoxCurrency(){
-        comboBoxCurrency.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (dateCurrency.getValue() != null && newValue != null) {
-                List<Currency> currencyList = currenciesFilter(newValue, dateCurrency.getValue());
-                if (currencyList.isEmpty()) tableView.setPlaceholder(new Label(resources.getString("no_courses_found_on_date")));
-                else populateTableView(currencyList);
-            }
-        });
+    private void showCurrencyData(Currency currency){
+        if (currency != null){
+            btnSetRate.setDisable(false);
+            txtFieldRateCBRF.setText(String.valueOf(currency.getValue()));
+            txtFieldRateBuy.setText(String.valueOf(currency.getValueBuy()));
+            txtFieldRateSale.setText(String.valueOf(currency.getValueSale()));
+            comboBoxCurrency.getSelectionModel().select(IsoCode.valueOf(currency.getCharCode()));
+            dateCurrency.setValue(currency.getCurrencyDate());
+        } else {
+            clearFields(txtFieldRateCBRF, txtFieldRateBuy, txtFieldRateSale);
+            btnSetRate.setDisable(true);
+        }
     }
 
-    private void listenerDatePicker(){
-        dateCurrency.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && comboBoxCurrency.getValue() != null){
-                List<Currency> currencyList = currenciesFilter(comboBoxCurrency.getValue(), newValue);
-                if (currencyList.isEmpty()) tableView.setPlaceholder(new Label(resources.getString("no_courses_found_on_date")));
-                populateTableView(currencyList);
-            }
-        });
+    private void clearFields(TextField... fields){
+        informant.logInfo("Очистка предзаполненых полей на форме");
+        for (TextField field: fields) field.clear();
+    }
+
+    private void setValidationOnPane(){
+        informant.logInfo("Установка валидации полей");
+        validator.onlyFloat(7,5, txtFieldRateCBRF, txtFieldRateSale, txtFieldRateBuy);
     }
 
     @FXML
@@ -109,36 +110,32 @@ public class CurrencyRateController implements Initializable {
                 resources.getString("rate_buy") + ": " + currency.getValueBuy() + "\n");
     }
 
+    @FXML
+    private void showAll() {
+        informant.logInfo("Отображение всех курсов валют");
+        List<Currency> allCurrencies = currencyService.findAll();
+        populateTableView(allCurrencies);
+        comboBoxCurrency.getSelectionModel().clearSelection();
+        dateCurrency.setValue(null);
+    }
+
+    @FXML
+    private void searchByFilter() {
+        if (dateCurrency.getValue() != null && comboBoxCurrency.getSelectionModel().getSelectedItem() != null) {
+            List<Currency> currencyList = currenciesFilter(comboBoxCurrency.getSelectionModel().getSelectedItem(), dateCurrency.getValue());
+            if (currencyList.isEmpty()) tableView.setPlaceholder(new Label(resources.getString("no_courses_found_on_date")));
+            else populateTableView(currencyList);
+        }
+    }
+
     private List<Currency> currenciesFilter(IsoCode code, LocalDate date){
         return allCurrency.stream()
                 .filter(s -> s.getCharCode().equals(code.name()) && s.getCurrencyDate().equals(date))
                 .collect(Collectors.toList());
     }
 
-    private void showCurrencyData(Currency currency){
-        if (currency != null){
-            btnSetRate.setDisable(false);
-            txtFieldRateCBRF.setText(String.valueOf(currency.getValue()));
-            txtFieldRateBuy.setText(String.valueOf(currency.getValueBuy()));
-            txtFieldRateSale.setText(String.valueOf(currency.getValueSale()));
-        } else {
-            clearFields(txtFieldRateCBRF, txtFieldRateBuy, txtFieldRateSale);
-            btnSetRate.setDisable(true);
-        }
-    }
-
     private void populateTableView(List<Currency> currencyList){
         informant.logInfo("Наполнение таблицы данными");
         tableView.setItems(FXCollections.observableArrayList(currencyList));
-    }
-
-    private void clearFields(TextField... fields){
-        informant.logInfo("Очистка предзаполненых полей на форме");
-        for (TextField field: fields) field.clear();
-    }
-
-    private void setValidationOnPane(){
-        informant.logInfo("Установка валидации полей");
-        validator.onlyFloat(7,5, txtFieldRateCBRF, txtFieldRateSale, txtFieldRateBuy);
     }
 }
