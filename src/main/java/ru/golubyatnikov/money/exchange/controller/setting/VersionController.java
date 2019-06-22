@@ -53,7 +53,6 @@ public class VersionController implements Initializable {
 
     private void getAndShowCurrentVersion(Model model){
         String version = model.getVersion();
-        informant.logInfo("Текущая версия программы: " + version);
         labelVersion.setText(version);
     }
 }
