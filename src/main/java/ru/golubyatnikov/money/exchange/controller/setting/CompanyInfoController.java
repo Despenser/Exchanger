@@ -190,7 +190,6 @@ public class CompanyInfoController implements Initializable {
         validator.onlyInteger(resources.getString("okpo_num"), txtFieldOKPO, 8);
         validator.onlyInteger(resources.getString("kpp_num"), txtFieldKPP, 9);
         validator.email(resources.getString("company_email"), txtFieldEmail);
-        //TODO валидация телефона
-        txtFieldPhone.setPromptText(resources.getString("company_phone"));
+        validator.checkPhoneNumber(resources.getString("company_phone"), txtFieldPhone);
     }
 }

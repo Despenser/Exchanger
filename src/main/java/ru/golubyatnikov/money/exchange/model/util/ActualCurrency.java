@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class ActualCurrency {
@@ -66,7 +66,10 @@ public class ActualCurrency {
 
         List<Currency> currenciesInBase = currencyService.findAll();
         if (currenciesInBase.isEmpty()) {
-            currenciesForMonth.forEach(listCurrency -> listCurrency.forEach(currency -> currencyService.create(currency)));
+            currenciesForMonth.forEach(listCurrency -> listCurrency.forEach(currency -> {
+                List<Currency> test = currencyService.findByDateAndValueAndCharCode(currency);
+                if (test.isEmpty()) currencyService.create(currency);
+            }));
             return true;
         }
         else {
@@ -119,12 +122,13 @@ public class ActualCurrency {
     private boolean isSameCurrencies(Currency actual, Currency lastInBase){
         LocalDate actualDate = actual.getCurrencyDate();
         float actualValue = actual.getValue();
+        String actualCharCode = actual.getCharCode();
 
         LocalDate lastDateInBase = lastInBase.getCurrencyDate();
         float lastValueInBase = lastInBase.getValue();
+        String lastCharCode = lastInBase.getCharCode();
 
-        if (!actualDate.equals(lastDateInBase)) return false;
-        else return !actualDate.equals(lastDateInBase) || !(actualValue != lastValueInBase);
+        return actualDate.equals(lastDateInBase) && actualValue == lastValueInBase && actualCharCode.equals(lastCharCode);
     }
 
     private List<Currency> loadCurrenciesFromSite(LocalDate date) throws IOException, JDOMException {
@@ -132,7 +136,7 @@ public class ActualCurrency {
         List<Currency> currencies = new ArrayList<>();
         Document document = saxBuilder.build(new URL(CBRF + DateEditor.formatLocalDateToString(date, DatePattern.PATTERN_SLASH)));
         Element rootNode = document.getRootElement();
-        List list = rootNode.getChildren("Valute");
+        List<Element> list = rootNode.getChildren("Valute");
         Currency currency;
         for (Object obj : list) {
             Element node = (Element) obj;

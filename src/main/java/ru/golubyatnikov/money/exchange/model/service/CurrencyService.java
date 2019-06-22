@@ -24,7 +24,15 @@ public class CurrencyService extends GenericService<Currency> {
     }
 
     public List<Currency> currenciesForPeriod(LocalDate from, LocalDate till) {
-        String query = "select * from currency where currencyDate between :text1 and :text2";
+        String query = "select * from currency where currencyDate between :text1 and value = :text2 and charCode = :text3";
         return customQuery(query, Currency.class, from, till);
+    }
+
+    public List<Currency> findByDateAndValueAndCharCode(Currency currency){
+        LocalDate date = currency.getCurrencyDate();
+        float value = currency.getValue();
+        String charCode = currency.getCharCode();
+        String query = "select * from currency where currencyDate = :text1 and charCode = :text2 and CAST(value AS DECIMAL) = CAST(:text3 AS DECIMAL)";
+        return customQuery(query, Currency.class, date, charCode, value);
     }
 }

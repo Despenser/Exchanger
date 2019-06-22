@@ -124,7 +124,7 @@ public class CurrencyRateController implements Initializable {
         if (dateCurrency.getValue() != null && comboBoxCurrency.getSelectionModel().getSelectedItem() != null) {
             List<Currency> currencyList = currenciesFilter(comboBoxCurrency.getSelectionModel().getSelectedItem(), dateCurrency.getValue());
             if (currencyList.isEmpty()) tableView.setPlaceholder(new Label(resources.getString("no_courses_found_on_date")));
-            else populateTableView(currencyList);
+            populateTableView(currencyList);
         }
     }
 

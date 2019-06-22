@@ -16,12 +16,6 @@ import java.math.BigInteger;
 import java.util.ResourceBundle;
 
 
-/* TODO Список основных задач
- * Доделать логирование
- * Валидация телефона
- * Валидация формы заведения клиента
- * Исправить баги
-*/
 public class Main extends Application {
 
     private ObservableList<Client> clients;

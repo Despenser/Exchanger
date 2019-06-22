@@ -54,7 +54,7 @@ public class Validator {
         for (GridPane table : tables) {
             for (Node node : table.getChildren()) {
                 if (node instanceof TextInputControl)
-                    if (((TextInputControl) node).getText().trim().isEmpty() && !node.getId().equals("txtFieldMiddleName")) return false;
+                    if (((TextInputControl) node).getText().trim().isEmpty() & !node.getId().equals("txtFieldMiddleName")) return false;
                 if (node instanceof ComboBoxBase) if (((ComboBoxBase) node).getValue() == null) return false;
             }
         }
@@ -124,11 +124,6 @@ public class Validator {
 
     public <T extends TextInputControl> void onlyCyrillic(String promptText, T field) {
         commonValidator(promptText, field, "^\\p{IsCyrillic}+$", "[^\\p{IsCyrillic}+$]");
-    }
-
-    public <T extends TextInputControl> void cyrillicOrNothing(String promptText, T field) {
-        // TODO либо кирилица либо ничего
-        // commonValidator(promptText, field, "^\\p{IsCyrillic}+$", "[^\\p{IsCyrillic}+$]");
     }
 
     public <T extends TextInputControl> void cyrillicAndDash(String promptText, T field) {
@@ -227,6 +222,62 @@ public class Validator {
         return (birthday45.compareTo(dateNow) > 0) || (birthday45.compareTo(passDate) <= 0);
     }
 
+    public void checkPhoneNumber(String promptText, TextField field) {
+        field.setPromptText(promptText);
+        field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                if (field.getText().length() == 0) field.appendText("+7");
+                field.setPrefColumnCount(12);
+                field.setTextFormatter(new TextFormatter<>(this::addPhoneNumberMask));
+            }
+            else {
+                if (!field.getText().matches("^(\\+7)\\d{10}$")) {
+                    field.setTextFormatter(null);
+                    field.clear();
+                    setWrongStyle(field);
+                    addNotification(field,"Пример заполнения: " + promptText);
+                }
+                else if(field.getText().matches("^(\\+7)\\d{10}$")) {
+                    setGoodStyle(field);
+                    removeNotification(field);
+                }
+            }
+        });
+    }
+
+    private TextFormatter.Change addPhoneNumberMask(TextFormatter.Change change) {
+        if (!change.isContentChange() && !change.getControlNewText().isEmpty()) return change;
+
+        String text = change.getControlNewText();
+        int start = change.getRangeStart();
+        int anchor = change.getAnchor();
+        int caret = change.getCaretPosition();
+
+        StringBuilder phone = new StringBuilder(text);
+
+        int dash;
+        while ((dash = phone.lastIndexOf("-")) >= start) {
+            phone.deleteCharAt(dash);
+            if (caret > dash) caret--;
+            if (anchor > dash) anchor--;
+        }
+
+        while (phone.length() < 12) phone.append(' ');
+
+        if (phone.length() > 12) phone.delete(12, phone.length());
+
+        text = phone.toString();
+        anchor = Math.min(anchor, 12);
+        caret = Math.min(caret, 12);
+
+        change.setText(text);
+        change.setRange(0, change.getControlText().length());
+        change.setAnchor(anchor);
+        change.setCaretPosition(caret);
+
+        return change;
+    }
+
     public void comboBoxNotNull(ComboBox<?> box) {
         box.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!box.getSelectionModel().isEmpty()) setGoodStyle(box);
@@ -278,88 +329,5 @@ public class Validator {
         try {
             Platform.runLater(() -> control.setTooltip(null));
         } catch (NullPointerException ignored){}
-    }
-
-    public void checkPhoneNumber(String promptText, TextField field) {
-        field.setPromptText(promptText);
-        field.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                field.setPrefColumnCount(13);
-                field.setTextFormatter(new TextFormatter<>(this::addPhoneNumberMask));
-            }
-            if (!newValue) {
-                if (!field.getText().matches(".*\\d+.*")) {
-                    field.setTextFormatter(null);
-                    field.clear();
-                    setWrongStyle(field);
-                    addNotification(field,"Пример заполнения: " + promptText);
-                }
-                else if(field.getText().matches("^(\\+7|8)\\(\\d{3}\\)\\d{3}-\\d{2}-\\d{2}$")) {
-                    setGoodStyle(field);
-                    removeNotification(field);
-                }
-            }
-        });
-    }
-
-    //___-___-__-__
-    private TextFormatter.Change addPhoneNumberMask(TextFormatter.Change change) {
-
-        if (!change.isContentChange() && !change.getControlNewText().isEmpty()) return change;
-
-        String text = change.getControlNewText();
-        int start = change.getRangeStart();
-        int end = change.getRangeEnd();
-
-        int anchor = change.getAnchor();
-        int caret = change.getCaretPosition();
-
-        StringBuilder phone = new StringBuilder(text);
-
-        int dash;
-        while ((dash = phone.lastIndexOf("-")) >= start) {
-            phone.deleteCharAt(dash);
-            if (caret > dash) caret--;
-            if (anchor > dash) anchor--;
-        }
-
-        while (phone.length() < 3) phone.append('_');
-
-        if (phone.length() == 3 || phone.charAt(3) != '-') {
-            phone.insert(3, '-');
-            if (caret > 3 || (caret == 3 && end <= 3 && change.isDeleted())) caret++;
-            if (anchor > 3 || (anchor == 3 && end <= 3 && change.isDeleted())) anchor++;
-        }
-
-        while (phone.length() < 7) phone.append('_');
-
-        if (phone.length() == 7 || phone.charAt(7) != '-') {
-            phone.insert(7, '-');
-            if (caret > 7 || (caret == 7 && end <= 7 && change.isDeleted())) caret++;
-            if (anchor > 7 || (anchor == 7 && end <= 7 && change.isDeleted())) anchor++;
-        }
-
-        while (phone.length() < 10) phone.append('_');
-
-        if (phone.length() == 10 || phone.charAt(10) != '-') {
-            phone.insert(10, '-');
-            if (caret > 10 || (caret == 10 && end <= 10 && change.isDeleted())) caret++;
-            if (anchor > 10 || (anchor == 10 && end <= 10 && change.isDeleted())) anchor++;
-        }
-
-        while (phone.length() < 13) phone.append('_');
-
-        if (phone.length() > 13) phone.delete(13, phone.length());
-
-        text = phone.toString();
-        anchor = Math.min(anchor, 13);
-        caret = Math.min(caret, 13);
-
-        change.setText(text);
-        change.setRange(0, change.getControlText().length());
-        change.setAnchor(anchor);
-        change.setCaretPosition(caret);
-
-        return change;
     }
 }

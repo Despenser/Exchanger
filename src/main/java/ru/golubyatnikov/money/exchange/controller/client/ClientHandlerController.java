@@ -230,14 +230,14 @@ public class ClientHandlerController extends AbstractModalController implements 
 
     @Override
     public void setValidationOnPane() {
-        //TODO переделать валидацию под не резидентов + валидация телефона
         validator.validatePane(btnAction, gridPaneFirst, gridPaneSecond);
         validator.cyrillicAndDash(resources.getString("prompt_surname"), txtFieldSurname);
         validator.onlyCyrillic(resources.getString("prompt_name"), txtFieldName);
         validator.onlyCyrillic(resources.getString("prompt_middle_name"), txtFieldMiddleName);
         validator.comboBoxNotNull(comboBoxGender);
-        validator.checkBirthdayAndPassport(resources.getString("prompt_birth_day"), resources.getString("prompt_date_released"), datePickerBirthday, datePickerReleased);
-        //validator.checkPhoneNumber(resources.getString("prompt_phone"), txtFieldPhone);
+        validator.checkBirthdayAndPassport(resources.getString("prompt_birth_day"),
+                resources.getString("prompt_date_released"), datePickerBirthday, datePickerReleased);
+        validator.checkPhoneNumber(resources.getString("prompt_phone"), txtFieldPhone);
         validator.email(resources.getString("prompt_email"), txtFieldEmail);
         validator.onlyInteger(resources.getString("prompt_serial"), txtFieldSerialPass, 4);
         validator.onlyInteger(resources.getString("prompt_number"), txtFieldNumPass, 6);
